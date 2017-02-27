@@ -8,6 +8,9 @@ var plumber = require('gulp-plumber');
 var jetpack = require('fs-jetpack');
 var bundle = require('./bundle');
 var utils = require('./utils');
+var usemin = require('gulp-usemin');
+var uglify = require('gulp-uglify');
+var rev = require('gulp-rev');
 
 var projectDir = jetpack;
 var srcDir = jetpack.cwd('./src');
@@ -32,6 +35,14 @@ gulp.task('environment', function () {
     projectDir.copy(configFile, destDir.path('env.json'), { overwrite: true });
 });
 
+gulp.task('minJS', function(){
+    return gulp.src(srcDir.path('index.html'))
+    .pipe(usemin({
+        js: [uglify(), rev()],
+    }))
+    .pipe(gulp.dest('app/'));
+})
+
 gulp.task('watch', function () {
     var beepOnError = function (done) {
         return function (err) {
@@ -50,4 +61,4 @@ gulp.task('watch', function () {
     }));
 });
 
-gulp.task('build', ['bundle', 'less', 'environment']);
+gulp.task('build', ['bundle','minJS', 'less', 'environment']);

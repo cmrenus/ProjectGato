@@ -7,6 +7,10 @@ import { remote } from 'electron'; // native electron module
 import jetpack from 'fs-jetpack'; // module loaded from npm
 //import { greet } from './hello_world/hello_world'; // code authored by you in this project
 import env from './env';
+/*import angular from 'angular';
+import angular_animate from 'angular-animate';
+import angular_aria from 'angular-aria';
+import angular_material from 'angular-material';*/
 /*
 console.log('Loaded environment variables:', env);
 
