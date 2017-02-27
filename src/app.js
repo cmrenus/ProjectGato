@@ -7,7 +7,7 @@ import { remote } from 'electron'; // native electron module
 import jetpack from 'fs-jetpack'; // module loaded from npm
 import { greet } from './hello_world/hello_world'; // code authored by you in this project
 import env from './env';
-
+/*
 console.log('Loaded environment variables:', env);
 
 var app = remote.app;
@@ -22,3 +22,21 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('platform-info').innerHTML = os.platform();
     document.getElementById('env-name').innerHTML = env.name;
 });
+*/
+(function(){
+	"use strict";
+
+	angular.module('ProjectGato', ['ngAnimate', 'ngRoute'])
+	.config(config);
+
+	config.$inject = ['$routeProvider'];
+
+	function config($routeProvider){
+		/*$routeProvider
+		.when('/', {
+			templateUrl: 
+		})*/
+	}
+
+
+})
