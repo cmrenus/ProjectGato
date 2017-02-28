@@ -61,4 +61,4 @@ gulp.task('watch', function () {
     }));
 });
 
-gulp.task('build', ['bundle','minJS', 'less', 'environment']);
+gulp.task('build', ['bundle', 'less', 'environment']);

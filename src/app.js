@@ -7,6 +7,11 @@ import { remote } from 'electron'; // native electron module
 import jetpack from 'fs-jetpack'; // module loaded from npm
 //import { greet } from './hello_world/hello_world'; // code authored by you in this project
 import env from './env';
+import angular from 'angular';
+import ngRoute from 'angular-route';
+import ngAnimate from 'angular-animate';
+import ngAria from 'angular-aria';
+import ngMaterial from 'angular-material';
 
 (function(){
 	"use strict";
