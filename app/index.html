@@ -9,7 +9,7 @@
 	</head>
 
 	<body ng-app="ProjectGato">
-		<md-toolbar class="md-hue-2" ng-cloak>
+		<md-toolbar class="md-hue-2" ng-cloak ng-controller="mainHeaderCtrl">
 			<div class="md-toolbar-tools">
 				<md-button class="md-button">
 					Music
@@ -20,7 +20,7 @@
 
 				<span flex></span>
 
-				<md-button class="md-icon-button" aria-label="More">
+				<md-button ng-click="toggleRight()" ng-hide="isOpenRight()" class="md-icon-button" aria-label="More">
 					<md-icon md-font-icon="settings">settings</md-icon>
 				</md-button>
 			</div>
@@ -49,6 +49,28 @@
 				</md-button>
 			</div>
 		</md-toolbar>
+
+		<md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
+
+			<md-toolbar class="md-theme-light">
+				<h1 class="md-toolbar-tools">Sidenav Right</h1>
+			</md-toolbar>
+			<md-content ng-controller="RightCtrl" layout-padding>
+				<form>
+					<md-input-container>
+						<label for="testInput">Test input</label>
+						<input type="text" id="testInput"
+						ng-model="data" md-autofocus>
+					</md-input-container>
+				</form>
+
+				<md-button ng-click="close()" class="md-primary">
+					Close Sidenav Right
+				</md-button>
+
+			</md-content>
+
+		</md-sidenav>
 		<div id='content' ng-view layout></div>
 	</body>
 	

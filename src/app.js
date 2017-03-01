@@ -32,3 +32,5 @@ import ngMaterial from 'angular-material';
 
 
 })();
+
+import { mainHeaderCtrl } from './client/header/mainHeaderCtrl';
