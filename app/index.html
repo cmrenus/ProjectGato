@@ -3,13 +3,53 @@
 	<head>
 		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
 		<link rel="stylesheet" type="text/css" href='./node_modules/angular-material/angular-material.min.css'>
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 	</head>
 
 	<body ng-app="ProjectGato">
+		<md-toolbar class="md-hue-2" ng-cloak>
+			<div class="md-toolbar-tools">
+				<md-button class="md-button">
+					Music
+				</md-button>
+				<md-button class="md-button">
+					Upload
+				</md-button>
+
+				<span flex></span>
+
+				<md-button class="md-icon-button" aria-label="More">
+					<md-icon md-font-icon="settings">settings</md-icon>
+				</md-button>
+			</div>
+		</md-toolbar>
+		<md-toolbar class="md-hue-6" ng-cloak>
+			<div class="md-toolbar-tools">
+				<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
+					<md-nav-item class="active" md-nav-click="goto('page1')" name="page1">
+						Playlists
+					</md-nav-item>
+					<md-nav-item md-nav-click="goto('page2')" name="page2">
+						Artists
+					</md-nav-item>
+					<md-nav-item md-nav-click="goto('page3')" name="page3">
+						Albums
+					</md-nav-item>
+					<md-nav-item md-nav-click="goto('page4')" name="page4">
+						Songs
+					</md-nav-item>
+				</md-nav-bar>
+
+				<span flex></span>
+				
+				<md-button class="md-icon-button" aria-label="search">
+					<md-icon md-font-icon="search">search</md-icon>
+				</md-button>
+			</div>
+		</md-toolbar>
 		<div id='content' ng-view></div>
 	</body>
-	<!--<script src="js/lib-60ce8e06b5.js"></script>-->
 	
 	<script type="text/javascript" src='app.js'></script>
 </html>

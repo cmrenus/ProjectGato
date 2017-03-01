@@ -24,16 +24,18 @@ var env = jetpack.cwd(__dirname).read('env.json', 'json');
 (function(){
 	"use strict";
 
-	angular.module('ProjectGato', ['ngAnimate', 'ngRoute'])
+	angular.module('ProjectGato', ['ngAnimate', 'ngRoute', 'ngMaterial'])
 	.config(config);
 
-	config.$inject = ['$routeProvider'];
+	config.$inject = ['$routeProvider', '$mdThemingProvider'];
 
-	function config($routeProvider){
+	function config($routeProvider, $mdThemingProvider){
 		/*$routeProvider
 		.when('/', {
 			templateUrl: 
 		})*/
+
+		$mdThemingProvider.theme('default').dark();
 	}
 
 
