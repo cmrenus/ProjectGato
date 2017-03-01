@@ -22,10 +22,10 @@ import ngMaterial from 'angular-material';
 	config.$inject = ['$routeProvider', '$mdThemingProvider'];
 
 	function config($routeProvider, $mdThemingProvider){
-		/*$routeProvider
+		$routeProvider
 		.when('/', {
-			templateUrl: 
-		})*/
+			templateUrl: './client/landing/welcome.html'
+		});
 
 		$mdThemingProvider.theme('default').dark();
 	}

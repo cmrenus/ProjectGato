@@ -30,10 +30,10 @@ var env = jetpack.cwd(__dirname).read('env.json', 'json');
 	config.$inject = ['$routeProvider', '$mdThemingProvider'];
 
 	function config($routeProvider, $mdThemingProvider){
-		/*$routeProvider
+		$routeProvider
 		.when('/', {
-			templateUrl: 
-		})*/
+			templateUrl: './client/landing/welcome.html'
+		});
 
 		$mdThemingProvider.theme('default').dark();
 	}
