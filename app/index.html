@@ -8,7 +8,7 @@
 
 	</head>
 
-	<body ng-app="ProjectGato">
+	<body ng-app="ProjectGato" ng-controller="rootCtrl" md-theme="{{theme}}">
 		<md-toolbar class="md-hue-2" ng-cloak ng-controller="mainHeaderCtrl as mainHeaderCtrl">
 			<div class="md-toolbar-tools">
 				<md-button class="md-button">
@@ -55,7 +55,7 @@
 			<md-toolbar class="md-theme-light">
 				<h1 class="md-toolbar-tools">Settings</h1>
 			</md-toolbar>
-			<md-content ng-controller="settingsCtrl as settingsCtrl" layout-padding>
+			<md-content ng-controller="settingsCtrl as settingsCtrl"  md-theme-watch="true" layout-padding>
 				<!--<form>
 					<md-input-container>
 						<label for="testInput">Primary Color</label>
@@ -64,12 +64,24 @@
 					</md-input-container>
 				</form>-->
 				<div layout="row" layout-wrap layout-align="center center">
+					<h3>Select Primary Color</h3>
 				    <md-button ng-repeat="color in settingsCtrl.colors" flex-gt-md="15" flex="30"
-				            md-colors="{background: '{{color}}'}" md-colors-watch="false"
-				            ng-disabled="primary === color && !isPrimary" ng-click="selectTheme(color)">
+				            md-colors="{background: 'default-{{color}}'}" md-colors-watch="false"
+				            ng-disabled="primary === color && !isPrimary" ng-click="settingsCtrl.selectPrimaryTheme(color)">
+				      	{{color}}
+				    </md-button>
+
+				    <h3>Select Secondary Color</h3>
+				    <md-button ng-repeat="color in settingsCtrl.colors" flex-gt-md="15" flex="30"
+				            md-colors="{background: 'default-{{color}}'}" md-colors-watch="false"
+				            ng-disabled="primary === color && !isPrimary" ng-click="settingsCtrl.selectSecondaryTheme(color)">
 				      	{{color}}
 				    </md-button>
 				</div>
+				
+				<md-button ng-click="settingsCtrl.saveColor()" class="md-primary">
+					Save colors
+				</md-button>
 
 				<md-button ng-click="close()" class="md-primary">
 					Close Sidenav Right

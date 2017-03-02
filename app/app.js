@@ -55,12 +55,94 @@ mainHeaderCtrl.$inject = ['$mdSidenav', '$log'];
 //})();
 
 class settingsCtrl {
-	constructor ($mdColorPalette) {
+	constructor ($mdColorPalette, colorService) {
+		'ngInject';
 		this._$mdColorPalette = $mdColorPalette;
+		this._colorService = colorService;
+		//this._$mdTheming = $mdTheming;
+		//this._themeProvider = themeProvider;
 		this.colors = Object.keys($mdColorPalette);
+		this.theme = {};
+		this.stuff = 'default';
+		//themeProvider.alwaysWatchTheme(true);
+		//themeProvider.generateThemesOnDemand(true);
+	};
+
+	selectPrimaryTheme(color){
+		this.theme.primary = color;
+	};
+
+	selectSecondaryTheme(color){
+		this.theme.secondary = color;
+	};
+
+	saveColor(){
+		this._colorService.changeCurrentTheme({
+			name: this.theme.primary + this.theme.secondary,
+			primary: this.theme.primary,
+			accent: this.theme.secondary
+		});
+		/*var theme = this._themeProvider.theme(this.theme.primary + this.theme.secondary)
+		.primaryPalette(this.theme.primary)
+		.accentPalette(this.theme.secondary);
+
+		this._$mdTheming.generateTheme(this.theme.primary + this.theme.secondary);
+		this._themeProvider.setDefaultTheme(this.theme.primary + this.theme.secondary);
+		this._$mdTheming.THEMES[this.theme.primary + this.theme.secondary] = theme;
+		this._$mdTheming.generateTheme(this.theme.primary + this.theme.secondary);*/
 	};
 }
-settingsCtrl.$inject = ['$mdColorPalette'];
+settingsCtrl.$inject = ['$mdColorPalette', 'colorService'];
+
+class colorService {
+	constructor($mdTheming, themeProvider){
+		'ngInject';
+		this._$mdTheming = $mdTheming;
+		this._themeProvider = themeProvider;
+		this.current = 'redblue';
+		themeProvider.alwaysWatchTheme(true);
+		themeProvider.generateThemesOnDemand(true);
+		themeProvider.theme('redblue').primaryPalette('red').accentPalette('blue');
+	};
+	//this.current = 'redblue';
+	//current = 'redblue';
+	/*currentTheme(){
+		return this.current;
+	}*/
+
+	changeCurrentTheme(newTheme){
+		var theme = this._themeProvider.theme(newTheme.name)
+		.primaryPalette(newTheme.primary)
+		.accentPalette(newTheme.accent);
+		this._$mdTheming.generateTheme(newTheme.name);
+		this._themeProvider.setDefaultTheme(newTheme.name);
+		this._$mdTheming.THEMES[newTheme.name] = theme;
+		this._$mdTheming.generateTheme(newTheme.name);
+		this.current = newTheme.name;		
+	}
+}
+
+colorService.$inject = ['$mdTheming', 'themeProvider'];
+
+//export default ( new colorService);
+
+class rootCtrl {
+	constructor(colorService, $scope){
+		'ngInject';
+		$scope.theme = colorService.current;
+
+		$scope.$watch(function () {
+	       return colorService.current;
+	     },                       
+	      function(newVal, oldVal) {
+	        $scope.theme = newVal;
+	    }, true);
+	}
+
+
+}
+
+rootCtrl.$inject = ['colorService', '$scope'];
 
 // Here is the starting point for your application code.
 // All stuff below is just to show you how it works. You can delete all of it.
@@ -72,18 +154,29 @@ settingsCtrl.$inject = ['$mdColorPalette'];
 
 	angular.module('ProjectGato', ['ngAnimate', 'ngRoute', 'ngMaterial'])
 	.config(config)
+	.service('colorService', colorService)
 	.controller('mainHeaderCtrl', mainHeaderCtrl)
-	.controller('settingsCtrl', settingsCtrl);
+	.controller('settingsCtrl', settingsCtrl)
+	.controller('rootCtrl', rootCtrl);
+	
 
-	config.$inject = ['$routeProvider', '$mdThemingProvider'];
+	config.$inject = ['$routeProvider', '$mdThemingProvider', '$mdColorPalette', '$provide'];
 
-	function config($routeProvider, $mdThemingProvider){
+	function config($routeProvider, $mdThemingProvider, $mdColorPalette, $provide){
 		$routeProvider
 		.when('/', {
 			templateUrl: './client/landing/welcome.html'
 		});
+		//$mdThemingProvider.theme('default').primaryPalette('blue').accentPalette('pink');
+		//$mdThemingProvider.generateThemesOnDemand(true);
 
-		$mdThemingProvider.theme('default');
+
+		//$mdThemingProvider.theme('default').primaryPalette('blue');
+		$mdThemingProvider.alwaysWatchTheme(true);
+		$mdThemingProvider.generateThemesOnDemand(true);
+		$provide.value('themeProvider', $mdThemingProvider);
+
+
 	}
 })();
 

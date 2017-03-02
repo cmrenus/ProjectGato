@@ -14,24 +14,37 @@ import ngAria from 'angular-aria';
 import ngMaterial from 'angular-material';
 import mainHeaderCtrl from './client/header/mainHeaderCtrl';
 import settingsCtrl from './client/settings/settingsCtrl';
+import colorService from './client/settings/colorService';
+import rootCtrl from './client/root/rootCtrl';
 
 (function(){
 	"use strict";
 
 	angular.module('ProjectGato', ['ngAnimate', 'ngRoute', 'ngMaterial'])
 	.config(config)
+	.service('colorService', colorService)
 	.controller('mainHeaderCtrl', mainHeaderCtrl)
-	.controller('settingsCtrl', settingsCtrl);
+	.controller('settingsCtrl', settingsCtrl)
+	.controller('rootCtrl', rootCtrl);
+	
 
-	config.$inject = ['$routeProvider', '$mdThemingProvider'];
+	config.$inject = ['$routeProvider', '$mdThemingProvider', '$mdColorPalette', '$provide'];
 
-	function config($routeProvider, $mdThemingProvider){
+	function config($routeProvider, $mdThemingProvider, $mdColorPalette, $provide){
 		$routeProvider
 		.when('/', {
 			templateUrl: './client/landing/welcome.html'
 		});
+		//$mdThemingProvider.theme('default').primaryPalette('blue').accentPalette('pink');
+		//$mdThemingProvider.generateThemesOnDemand(true);
 
-		$mdThemingProvider.theme('default');
+
+		//$mdThemingProvider.theme('default').primaryPalette('blue');
+		$mdThemingProvider.alwaysWatchTheme(true);
+		$mdThemingProvider.generateThemesOnDemand(true);
+		$provide.value('themeProvider', $mdThemingProvider);
+
+
 	}
 })();
 
