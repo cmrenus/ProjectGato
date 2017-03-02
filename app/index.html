@@ -53,16 +53,23 @@
 		<md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
 
 			<md-toolbar class="md-theme-light">
-				<h1 class="md-toolbar-tools">Sidenav Right</h1>
+				<h1 class="md-toolbar-tools">Settings</h1>
 			</md-toolbar>
-			<md-content layout-padding>
-				<form>
+			<md-content ng-controller="settingsCtrl as settingsCtrl" layout-padding>
+				<!--<form>
 					<md-input-container>
-						<label for="testInput">Test input</label>
+						<label for="testInput">Primary Color</label>
 						<input type="text" id="testInput"
 						ng-model="data" md-autofocus>
 					</md-input-container>
-				</form>
+				</form>-->
+				<div layout="row" layout-wrap layout-align="center center">
+				    <md-button ng-repeat="color in settingsCtrl.colors" flex-gt-md="15" flex="30"
+				            md-colors="{background: '{{color}}'}" md-colors-watch="false"
+				            ng-disabled="primary === color && !isPrimary" ng-click="selectTheme(color)">
+				      	{{color}}
+				    </md-button>
+				</div>
 
 				<md-button ng-click="close()" class="md-primary">
 					Close Sidenav Right

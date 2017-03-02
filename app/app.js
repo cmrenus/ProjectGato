@@ -17,47 +17,50 @@ var angularMaterial = require('angular-material');
 var env = jetpack.cwd(__dirname).read('env.json', 'json');
 
 //(function(){
-	/*angular.module('ProjectGato')
-	.controller('mainHeaderCtrl', mainHeaderCtrl);*/
 
 	
 
-	class mainHeaderCtrl{
+class mainHeaderCtrl{
 
-		constructor($mdSidenav, $log){
-			'ngInject';
+	constructor($mdSidenav, $log){
+		'ngInject';
 
-			this._$mdSidenav = $mdSidenav;
-			this._$log = $log;
-			this.toggleRight = this.buildToggler('right');
-			//console.log($mdSidenav('right').isOpen());
-			//console.log(this);
-		};
-	    /**
-	     * Build handler to open/close a SideNav; when animation finishes
-	     * report completion in console
-	     */
+		this._$mdSidenav = $mdSidenav;
+		this._$log = $log;
+		this.toggleRight = this.buildToggler('right');
+	};
+    /**
+     * Build handler to open/close a SideNav; when animation finishes
+     * report completion in console
+     */
 
-	    isOpenRight(){
-	    	console.log(this);
-	    	return this._$mdSidenav('right').isOpen();
-	    }
+    isOpenRight(){
+    	return this._$mdSidenav('right').isOpen();
+    }
 
-	    buildToggler(navID) {
-	      return () => {
-	        // Component lookup should always be available since we are not using `ng-if`
-	        this._$mdSidenav(navID)
-	          .toggle()
-	          .then( () => {
-	            this._$log.debug("toggle " + navID + " is done");
-	          });
-	      };
-	    }
-	}
-	mainHeaderCtrl.$inject = ['$mdSidenav', '$log'];
+    buildToggler(navID) {
+      return () => {
+        // Component lookup should always be available since we are not using `ng-if`
+        this._$mdSidenav(navID)
+          .toggle()
+          .then( () => {
+            this._$log.debug("toggle " + navID + " is done");
+          });
+      };
+    }
+}
+mainHeaderCtrl.$inject = ['$mdSidenav', '$log'];
 
-	
+
 //})();
+
+class settingsCtrl {
+	constructor ($mdColorPalette) {
+		this._$mdColorPalette = $mdColorPalette;
+		this.colors = Object.keys($mdColorPalette);
+	};
+}
+settingsCtrl.$inject = ['$mdColorPalette'];
 
 // Here is the starting point for your application code.
 // All stuff below is just to show you how it works. You can delete all of it.
@@ -69,7 +72,8 @@ var env = jetpack.cwd(__dirname).read('env.json', 'json');
 
 	angular.module('ProjectGato', ['ngAnimate', 'ngRoute', 'ngMaterial'])
 	.config(config)
-	.controller('mainHeaderCtrl', mainHeaderCtrl);
+	.controller('mainHeaderCtrl', mainHeaderCtrl)
+	.controller('settingsCtrl', settingsCtrl);
 
 	config.$inject = ['$routeProvider', '$mdThemingProvider'];
 
@@ -79,7 +83,7 @@ var env = jetpack.cwd(__dirname).read('env.json', 'json');
 			templateUrl: './client/landing/welcome.html'
 		});
 
-		$mdThemingProvider.theme('default').dark();
+		$mdThemingProvider.theme('default');
 	}
 })();
 

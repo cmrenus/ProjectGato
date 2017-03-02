@@ -13,13 +13,15 @@ import ngAnimate from 'angular-animate';
 import ngAria from 'angular-aria';
 import ngMaterial from 'angular-material';
 import mainHeaderCtrl from './client/header/mainHeaderCtrl';
+import settingsCtrl from './client/settings/settingsCtrl';
 
 (function(){
 	"use strict";
 
 	angular.module('ProjectGato', ['ngAnimate', 'ngRoute', 'ngMaterial'])
 	.config(config)
-	.controller('mainHeaderCtrl', mainHeaderCtrl);
+	.controller('mainHeaderCtrl', mainHeaderCtrl)
+	.controller('settingsCtrl', settingsCtrl);
 
 	config.$inject = ['$routeProvider', '$mdThemingProvider'];
 
@@ -29,7 +31,7 @@ import mainHeaderCtrl from './client/header/mainHeaderCtrl';
 			templateUrl: './client/landing/welcome.html'
 		});
 
-		$mdThemingProvider.theme('default').dark();
+		$mdThemingProvider.theme('default');
 	}
 })();
 
