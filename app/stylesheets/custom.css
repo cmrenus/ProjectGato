@@ -1,3 +1,11 @@
 html, body, #content {
 	height: 100%
 }
+
+md-sidenav, 
+md-sidenav.md-locked-open, 
+md-sidenav.md-closed.md-locked-open-add-active {
+    min-width: 700px !important;
+    width: 85vw !important;
+    max-width: 700px !important;
+} 

@@ -59,13 +59,9 @@ class settingsCtrl {
 		'ngInject';
 		this._$mdColorPalette = $mdColorPalette;
 		this._colorService = colorService;
-		//this._$mdTheming = $mdTheming;
-		//this._themeProvider = themeProvider;
 		this.colors = Object.keys($mdColorPalette);
 		this.theme = {};
 		this.stuff = 'default';
-		//themeProvider.alwaysWatchTheme(true);
-		//themeProvider.generateThemesOnDemand(true);
 	};
 
 	selectPrimaryTheme(color){
@@ -82,14 +78,6 @@ class settingsCtrl {
 			primary: this.theme.primary,
 			accent: this.theme.secondary
 		});
-		/*var theme = this._themeProvider.theme(this.theme.primary + this.theme.secondary)
-		.primaryPalette(this.theme.primary)
-		.accentPalette(this.theme.secondary);
-
-		this._$mdTheming.generateTheme(this.theme.primary + this.theme.secondary);
-		this._themeProvider.setDefaultTheme(this.theme.primary + this.theme.secondary);
-		this._$mdTheming.THEMES[this.theme.primary + this.theme.secondary] = theme;
-		this._$mdTheming.generateTheme(this.theme.primary + this.theme.secondary);*/
 	};
 }
 settingsCtrl.$inject = ['$mdColorPalette', 'colorService'];
@@ -105,14 +93,8 @@ class colorService {
 		themeProvider.theme('redblue').primaryPalette('red').accentPalette('blue');
 		$mdTheming.generateTheme('redblue');
 		themeProvider.setDefaultTheme('redblue');
-		//this._$mdTheming.THEMES[newTheme.name] = theme;
 		this._$mdTheming.generateTheme('redblue');
 	};
-	//this.current = 'redblue';
-	//current = 'redblue';
-	/*currentTheme(){
-		return this.current;
-	}*/
 
 	changeCurrentTheme(newTheme){
 		var theme = this._themeProvider.theme(newTheme.name)
@@ -127,8 +109,6 @@ class colorService {
 }
 
 colorService.$inject = ['$mdTheming', 'themeProvider'];
-
-//export default ( new colorService);
 
 class rootCtrl {
 	constructor(colorService, $scope){
@@ -171,11 +151,7 @@ rootCtrl.$inject = ['colorService', '$scope'];
 		.when('/', {
 			templateUrl: './client/landing/welcome.html'
 		});
-		//$mdThemingProvider.theme('default').primaryPalette('blue').accentPalette('pink');
-		//$mdThemingProvider.generateThemesOnDemand(true);
 
-
-		//$mdThemingProvider.theme('default').primaryPalette('blue');
 		$mdThemingProvider.alwaysWatchTheme(true);
 		$mdThemingProvider.generateThemesOnDemand(true);
 		$provide.value('themeProvider', $mdThemingProvider);
