@@ -9,6 +9,10 @@ export default class colorService {
 		themeProvider.alwaysWatchTheme(true);
 		themeProvider.generateThemesOnDemand(true);
 		themeProvider.theme('redblue').primaryPalette('red').accentPalette('blue');
+		$mdTheming.generateTheme('redblue');
+		themeProvider.setDefaultTheme('redblue');
+		//this._$mdTheming.THEMES[newTheme.name] = theme;
+		this._$mdTheming.generateTheme('redblue');
 	};
 	//this.current = 'redblue';
 	//current = 'redblue';
