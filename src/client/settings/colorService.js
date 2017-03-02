@@ -11,14 +11,8 @@ export default class colorService {
 		themeProvider.theme('redblue').primaryPalette('red').accentPalette('blue');
 		$mdTheming.generateTheme('redblue');
 		themeProvider.setDefaultTheme('redblue');
-		//this._$mdTheming.THEMES[newTheme.name] = theme;
 		this._$mdTheming.generateTheme('redblue');
 	};
-	//this.current = 'redblue';
-	//current = 'redblue';
-	/*currentTheme(){
-		return this.current;
-	}*/
 
 	changeCurrentTheme(newTheme){
 		var theme = this._themeProvider.theme(newTheme.name)
@@ -33,5 +27,3 @@ export default class colorService {
 }
 
 colorService.$inject = ['$mdTheming', 'themeProvider'];
-
-//export default ( new colorService);

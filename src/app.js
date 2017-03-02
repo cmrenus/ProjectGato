@@ -35,11 +35,7 @@ import rootCtrl from './client/root/rootCtrl';
 		.when('/', {
 			templateUrl: './client/landing/welcome.html'
 		});
-		//$mdThemingProvider.theme('default').primaryPalette('blue').accentPalette('pink');
-		//$mdThemingProvider.generateThemesOnDemand(true);
 
-
-		//$mdThemingProvider.theme('default').primaryPalette('blue');
 		$mdThemingProvider.alwaysWatchTheme(true);
 		$mdThemingProvider.generateThemesOnDemand(true);
 		$provide.value('themeProvider', $mdThemingProvider);
