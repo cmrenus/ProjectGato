@@ -24,32 +24,38 @@ var env = jetpack.cwd(__dirname).read('env.json', 'json');
 
 	class mainHeaderCtrl{
 
-		contructor($mdSidenav, $log){
+		constructor($mdSidenav, $log){
 			'ngInject';
 
-			this.$mdSidenav = $mdsideNav;
-			this.$log = $log;
-			this.toggleRight = buildToggler('right');
-		    this.isOpenRight = function(){
-		      return this.$mdSidenav('right').isOpen();
-		    };
+			this._$mdSidenav = $mdSidenav;
+			this._$log = $log;
+			this.toggleRight = this.buildToggler('right');
+			//console.log($mdSidenav('right').isOpen());
+			//console.log(this);
 		};
 	    /**
 	     * Build handler to open/close a SideNav; when animation finishes
 	     * report completion in console
 	     */
 
+	    isOpenRight(){
+	    	console.log(this);
+	    	return this._$mdSidenav('right').isOpen();
+	    }
+
 	    buildToggler(navID) {
-	      return function() {
+	      return () => {
 	        // Component lookup should always be available since we are not using `ng-if`
-	        $mdSidenav(navID)
+	        this._$mdSidenav(navID)
 	          .toggle()
-	          .then(function () {
-	            this.$log.debug("toggle " + navID + " is done");
+	          .then( () => {
+	            this._$log.debug("toggle " + navID + " is done");
 	          });
 	      };
 	    }
 	}
+	mainHeaderCtrl.$inject = ['$mdSidenav', '$log'];
+
 	
 //})();
 
