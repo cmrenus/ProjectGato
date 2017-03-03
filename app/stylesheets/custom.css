@@ -8,4 +8,67 @@ md-sidenav.md-closed.md-locked-open-add-active {
     min-width: 700px !important;
     width: 85vw !important;
     max-width: 700px !important;
-} 
+}
+
+md-input-container.hide-error-msg .md-errors-spacer { 
+	display: none; 
+}
+
+.search-bar.search-open{
+	transition: .2s cubic-bezier(.4,0,.2,1);
+	width: 270px;
+}
+
+.search-bar.search-open input{
+	padding: 2px 2px 1px 1px;
+}
+
+.search-bar {
+	transition: .2s cubic-bezier(.4,0,.2,1);
+	width: 0;
+	padding: 0px;
+	margin-bottom: 3px;
+}
+
+.search-bar input {
+	padding: 0;
+}
+
+.search-bar label {
+	padding-left: 0px !important;
+}
+
+.search-category {
+	transition: .2s cubic-bezier(.4,0,.2,1);
+	display: none;
+}
+
+.search-bar .close-button{
+	top: -2px;
+	position: absolute;
+	right: -8px;
+	padding: 0px;
+	margin: 0px;
+	display: none;
+}
+
+.search-bar.search-open .close-button{
+	display: block;
+}
+
+.search-category.search-open {
+	transition: .2s cubic-bezier(.4,0,.2,1);
+	display: inline-block;
+}
+
+.btn-small {
+	min-width: 0;
+	padding: 0;
+	margin: 0;
+}
+
+.searchbar-search-button {
+	top: 14px;
+	margin: 0 !important;
+	padding: 0 !important;
+}
