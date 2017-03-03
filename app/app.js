@@ -150,6 +150,9 @@ rootCtrl.$inject = ['colorService', '$scope'];
 		$routeProvider
 		.when('/', {
 			templateUrl: './client/landing/welcome.html'
+		})
+		.when('/music/playlists', {
+			templateUrl: './client/music/musicPage.html'
 		});
 
 		$mdThemingProvider.alwaysWatchTheme(true);

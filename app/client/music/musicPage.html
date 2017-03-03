@@ -1,0 +1,52 @@
+<div layout="column" flex>
+	<div layout='row'>
+		<md-tabs md-selected="currentTab" md-border-bottom flex>
+			<md-tab id='playlists-tab' aria-controls="playlists-tab-content" label="playlists">
+			</md-tab>
+			<md-tab id='artists-tab' aria-controls="artists-tab-content" label='artists'>
+			</md-tab>
+			<md-tab id='albums-tab' aria-controls="albums-tab-content" label='albums'>
+			</md-tab>
+			<md-tab id='songs-tab' aria-control='songs-tab-content' label='songs'>
+			</md-tab>
+		</md-tabs>
+			<!--
+			<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
+				<md-nav-item class="active" md-nav-click="goto('page1')" name="page1">
+					Playlists
+				</md-nav-item>
+				<md-nav-item md-nav-click="goto('page2')" name="page2">
+					Artists
+				</md-nav-item>
+				<md-nav-item md-nav-click="goto('page3')" name="page3">
+					Albums
+				</md-nav-item>
+				<md-nav-item md-nav-click="goto('page4')" name="page4">
+					Songs
+				</md-nav-item>
+			</md-nav-bar>
+			-->
+		<span flex></span>
+		
+		<md-button class="md-icon-button" aria-label="search">
+			<md-icon md-font-icon="search">search</md-icon>
+		</md-button>
+	</div>
+
+	<md-content layout-padding flex>
+		<ng-switch on="currentTab" class="tabpanel-container">
+			<div role='tabpanel' id='playlists-tab-content' aria-labeledby='playlists-tab' ng-switch-when="0">
+				<h3>Playlists</h3>
+			</div>
+			<div role='tabpanel' id='playlists-tab-content' aria-labeledby='playlists-tab' ng-switch-when="1">
+				<h3>Artists</h3>
+			</div>
+			<div role='tabpanel' id='playlists-tab-content' aria-labeledby='playlists-tab' ng-switch-when="2">
+				<h3>Albums</h3>
+			</div>
+			<div role='tabpanel' id='playlists-tab-content' aria-labeledby='playlists-tab' ng-switch-when="3">
+				<h3>Songs</h3>
+			</div>
+		</ng-switch>
+	</md-content>
+</div>

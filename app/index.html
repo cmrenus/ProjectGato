@@ -11,7 +11,7 @@
 	<body ng-app="ProjectGato" ng-controller="rootCtrl" md-theme="{{theme}}">
 		<md-toolbar class="md-hue-2" ng-cloak ng-controller="mainHeaderCtrl as mainHeaderCtrl">
 			<div class="md-toolbar-tools">
-				<md-button class="md-button">
+				<md-button href="#/music/playlists" class="md-button">
 					Music
 				</md-button>
 				<md-button class="md-button">
@@ -25,8 +25,22 @@
 				</md-button>
 			</div>
 		</md-toolbar>
-		<md-toolbar class="md-hue-6" ng-cloak>
+		<!--<md-toolbar class="md-hue-6" ng-cloak>
 			<div class="md-toolbar-tools">
+				<md-tabs md-dynamic-height md-border-bottom>
+      				<md-tab label="playlists">
+						
+      				</md-tab>
+      				<md-tab label='artists'>
+ 						
+      				</md-tab>
+					<md-tab label='albums'>
+						
+					</md-tab>
+					<md-tab label='songs'>
+					</md-tab>
+				</md-tabs>-->
+				<!--
 				<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
 					<md-nav-item class="active" md-nav-click="goto('page1')" name="page1">
 						Playlists
@@ -41,14 +55,14 @@
 						Songs
 					</md-nav-item>
 				</md-nav-bar>
-
-				<span flex></span>
+				-->
+				<!--<span flex></span>
 				
 				<md-button class="md-icon-button" aria-label="search">
 					<md-icon md-font-icon="search">search</md-icon>
 				</md-button>
 			</div>
-		</md-toolbar>
+		</md-toolbar>-->
 
 		<md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
 

@@ -34,6 +34,9 @@ import rootCtrl from './client/root/rootCtrl';
 		$routeProvider
 		.when('/', {
 			templateUrl: './client/landing/welcome.html'
+		})
+		.when('/music/playlists', {
+			templateUrl: './client/music/musicPage.html'
 		});
 
 		$mdThemingProvider.alwaysWatchTheme(true);
