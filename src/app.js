@@ -37,6 +37,9 @@ import rootCtrl from './client/root/rootCtrl';
 		})
 		.when('/music/playlists', {
 			templateUrl: './client/music/musicPage.html'
+		})
+		.when('/upload', {
+			templateUrl: './client/upload/uploadExternalSources.html'
 		});
 
 		$mdThemingProvider.alwaysWatchTheme(true);

@@ -153,6 +153,9 @@ rootCtrl.$inject = ['colorService', '$scope'];
 		})
 		.when('/music/playlists', {
 			templateUrl: './client/music/musicPage.html'
+		})
+		.when('/upload', {
+			templateUrl: './client/upload/uploadExternalSources.html'
 		});
 
 		$mdThemingProvider.alwaysWatchTheme(true);
