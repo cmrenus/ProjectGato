@@ -22,17 +22,22 @@ var env = jetpack.cwd(__dirname).read('env.json', 'json');
 
 class mainHeaderCtrl{
 
-	constructor($mdSidenav, $log){
+	constructor($mdSidenav, $log, $location){
 		'ngInject';
 
 		this._$mdSidenav = $mdSidenav;
 		this._$log = $log;
 		this.toggleRight = this.buildToggler('right');
+    this.active = $location.path().split('/')[0];
 	};
     /**
      * Build handler to open/close a SideNav; when animation finishes
      * report completion in console
      */
+
+    clickTab(tab){
+      this.active = tab;
+    }
 
     isOpenRight(){
     	return this._$mdSidenav('right').isOpen();
@@ -49,7 +54,7 @@ class mainHeaderCtrl{
       };
     }
 }
-mainHeaderCtrl.$inject = ['$mdSidenav', '$log'];
+mainHeaderCtrl.$inject = ['$mdSidenav', '$log', '$location'];
 
 
 //})();

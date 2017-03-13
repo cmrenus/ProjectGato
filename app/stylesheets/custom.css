@@ -72,3 +72,13 @@ md-input-container.hide-error-msg .md-errors-spacer {
 	margin: 0 !important;
 	padding: 0 !important;
 }
+
+.main-nav-button {
+	margin: 0;
+	padding: 10px;
+	height: 100%;
+}
+
+.main-nav-button.active {
+	background-color: blue;
+}
