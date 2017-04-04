@@ -22,18 +22,23 @@ var env = jetpack.cwd(__dirname).read('env.json', 'json');
 
 class mainHeaderCtrl{
 
-	constructor($mdSidenav, $log, $location, $mdTheming, $mdColors){
+	constructor($mdSidenav, $log, $location, colorService, $scope){
 		'ngInject';
 
 		this._$mdSidenav = $mdSidenav;
 		this._$log = $log;
 		this.toggleRight = this.buildToggler('right');
     this.active = $location.path().split('/')[0];
-    console.log($mdTheming.THEMES[$mdTheming.defaultTheme()].colors.accent);
-    var name = $mdTheming.THEMES[$mdTheming.defaultTheme()].colors.accent.name;
-    var hue = $mdTheming.THEMES[$mdTheming.defaultTheme()].colors.accent.hues.default;
-    console.log($mdColors.getThemeColor(name + '-' + hue + '-.8'));
-    this.activeBackgroundColor = $mdColors.getThemeColor(name + '-' + hue + '-.8');
+    
+    this.activeBackgroundColor = colorService.activeBackgroundColor;
+    var vm = this;
+    $scope.$watch(function(){return colorService.getActiveBackgroundColor()}, function(newVal, oldVal, scope){
+      console.log(newVal, oldVal);
+      if(newVal){
+        vm.activeBackgroundColor = newVal;
+        console.log('watch new value');
+      }
+    }, true);
 	};
     /**
      * Build handler to open/close a SideNav; when animation finishes
@@ -59,7 +64,7 @@ class mainHeaderCtrl{
       };
     }
 }
-mainHeaderCtrl.$inject = ['$mdSidenav', '$log', '$location', '$mdTheming', '$mdColors'];
+mainHeaderCtrl.$inject = ['$mdSidenav', '$log', '$location', 'colorService', '$scope'];
 
 
 //})();
@@ -93,18 +98,29 @@ class settingsCtrl {
 settingsCtrl.$inject = ['$mdColorPalette', 'colorService'];
 
 class colorService {
-	constructor($mdTheming, themeProvider){
+	constructor($mdTheming, themeProvider, $mdColors, $rootScope){
 		'ngInject';
 		this._$mdTheming = $mdTheming;
+		this._$mdColors = $mdColors;
+		this._$rootScope = $rootScope;
 		this._themeProvider = themeProvider;
 		this.current = 'redblue';
+
+
 		themeProvider.alwaysWatchTheme(true);
 		themeProvider.generateThemesOnDemand(true);
 		themeProvider.theme('redblue').primaryPalette('red').accentPalette('blue');
 		$mdTheming.generateTheme('redblue');
 		themeProvider.setDefaultTheme('redblue');
 		this._$mdTheming.generateTheme('redblue');
+		var name = $mdTheming.THEMES[$mdTheming.defaultTheme()].colors.accent.name;
+    	var hue = $mdTheming.THEMES[$mdTheming.defaultTheme()].colors.accent.hues.default;
+    	this.activeBackgroundColor = $mdColors.getThemeColor(name + '-' + hue + '-.8');
 	};
+
+	getActiveBackgroundColor(){
+		return this.activeBackgroundColor;
+	}
 
 	changeCurrentTheme(newTheme){
 		var theme = this._themeProvider.theme(newTheme.name)
@@ -114,11 +130,17 @@ class colorService {
 		this._themeProvider.setDefaultTheme(newTheme.name);
 		this._$mdTheming.THEMES[newTheme.name] = theme;
 		this._$mdTheming.generateTheme(newTheme.name);
-		this.current = newTheme.name;		
+		this.current = newTheme.name;	
+		var name = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.name;
+    	var hue = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.hues.default;
+    	this.activeBackgroundColor = this._$mdColors.getThemeColor(name + '-' + hue + '-.8');
+    	console.log('colorService backgroundCOlor', this.activeBackgroundColor);
 	}
+
+
 }
 
-colorService.$inject = ['$mdTheming', 'themeProvider'];
+colorService.$inject = ['$mdTheming', 'themeProvider', '$mdColors', '$rootScope'];
 
 class rootCtrl {
 	constructor(colorService, $scope){

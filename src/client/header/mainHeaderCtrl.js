@@ -5,18 +5,21 @@
 
 class mainHeaderCtrl{
 
-	constructor($mdSidenav, $log, $location, $mdTheming, $mdColors){
+	constructor($mdSidenav, $log, $location, colorService, $scope){
 		'ngInject';
 
 		this._$mdSidenav = $mdSidenav;
 		this._$log = $log;
 		this.toggleRight = this.buildToggler('right');
     this.active = $location.path().split('/')[0];
-    console.log($mdTheming.THEMES[$mdTheming.defaultTheme()].colors.accent);
-    var name = $mdTheming.THEMES[$mdTheming.defaultTheme()].colors.accent.name;
-    var hue = $mdTheming.THEMES[$mdTheming.defaultTheme()].colors.accent.hues.default;
-    console.log($mdColors.getThemeColor(name + '-' + hue + '-.8'));
-    this.activeBackgroundColor = $mdColors.getThemeColor(name + '-' + hue + '-.8');
+    
+    this.activeBackgroundColor = colorService.getActiveBackgroundColor();
+    var vm = this;
+    $scope.$watch(function(){return colorService.getActiveBackgroundColor()}, function(newVal, oldVal, scope){
+      if(newVal){
+        vm.activeBackgroundColor = newVal;
+      }
+    }, true);
 	};
     /**
      * Build handler to open/close a SideNav; when animation finishes
@@ -42,7 +45,7 @@ class mainHeaderCtrl{
       };
     }
 }
-mainHeaderCtrl.$inject = ['$mdSidenav', '$log', '$location', '$mdTheming', '$mdColors'];
+mainHeaderCtrl.$inject = ['$mdSidenav', '$log', '$location', 'colorService', '$scope'];
 
 export default mainHeaderCtrl;
 //})();
