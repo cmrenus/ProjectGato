@@ -11,10 +11,10 @@
 	<body ng-app="ProjectGato" ng-controller="rootCtrl" md-theme="{{theme}}">
 		<md-toolbar class="md-hue-2" ng-cloak ng-controller="mainHeaderCtrl as mainHeaderCtrl">
 			<div class="md-toolbar-tools">
-				<md-button href="#/music/playlists" ng-class="{active: mainHeaderCtrl.active === 'music'}" ng-click="mainHeaderCtrl.clickTab('music')" class="md-button main-nav-button">
+				<md-button href="#/music/playlists" ng-class="{active: mainHeaderCtrl.active === 'music'}" ng-style='mainHeaderCtrl.active === "music" && {"background-color": mainHeaderCtrl.activeBackgroundColor}' ng-click="mainHeaderCtrl.clickTab('music')" class="md-button main-nav-button">
 					Music
 				</md-button>
-				<md-button href="#/upload" ng-class="{active: mainHeaderCtrl.active === 'upload'}" ng-click="mainHeaderCtrl.clickTab('upload')" class="md-button main-nav-button">
+				<md-button href="#/upload" ng-class="{active: mainHeaderCtrl.active === 'upload'}" ng-style='mainHeaderCtrl.active === "upload" && {"background-color": mainHeaderCtrl.activeBackgroundColor}' ng-click="mainHeaderCtrl.clickTab('upload')" class="md-button main-nav-button">
 					Upload
 				</md-button>
 
