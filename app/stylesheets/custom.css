@@ -82,3 +82,9 @@ md-input-container.hide-error-msg .md-errors-spacer {
 .main-nav-button.active {
 	background-color: blue;
 }
+
+
+
+.unselected-color {
+	opacity: .4;
+}

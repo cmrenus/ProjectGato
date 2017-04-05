@@ -7,6 +7,7 @@ export default class colorService {
 		this._$mdColors = $mdColors;
 		this._$rootScope = $rootScope;
 		this._themeProvider = themeProvider;
+		this._userService = userService;
 		this.current = '';
 		themeProvider.alwaysWatchTheme(true);
 		themeProvider.generateThemesOnDemand(true);
@@ -26,6 +27,12 @@ export default class colorService {
 	getActiveBackgroundColor(){
 		return this.activeBackgroundColor;
 	}
+
+	getCurrentColors(){
+		return this._userService.getUserData().then(function(data){
+			return data.data.settings.colorPalette;
+		});
+	};
 
 	changeCurrentTheme(newTheme){
 		var theme;

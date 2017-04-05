@@ -75,26 +75,35 @@ class settingsCtrl {
 		this.colors = Object.keys($mdColorPalette);
 		this.theme = {};
 		this.stuff = 'default';
+		this.init(this);	
+	};
+
+	init(vm){
+		this._colorService.getCurrentColors().then(function(data){
+			vm.theme = data;
+		});
 	};
 
 	selectPrimaryTheme(color){
 		this.theme.primary = color;
+		console.log(this.theme);
 	};
 
 	selectSecondaryTheme(color){
-		this.theme.secondary = color;
+		this.theme.accent = color;
 	};
 
 	saveColor(){
 		console.log(this.theme);
 		this._colorService.changeCurrentTheme({
-			name: this.theme.primary + '_' + this.theme.secondary,
+			name: this.theme.primary + '_' + this.theme.accent,
 			primary: this.theme.primary,
-			accent: this.theme.secondary,
-			isDark: this.theme.darkPalette
+			accent: this.theme.accent,
+			isDark: this.theme.isDark
 		});
 	};
 }
+
 settingsCtrl.$inject = ['$mdColorPalette', 'colorService'];
 
 class colorService {
@@ -104,6 +113,7 @@ class colorService {
 		this._$mdColors = $mdColors;
 		this._$rootScope = $rootScope;
 		this._themeProvider = themeProvider;
+		this._userService = userService;
 		this.current = '';
 		themeProvider.alwaysWatchTheme(true);
 		themeProvider.generateThemesOnDemand(true);
@@ -123,6 +133,12 @@ class colorService {
 	getActiveBackgroundColor(){
 		return this.activeBackgroundColor;
 	}
+
+	getCurrentColors(){
+		return this._userService.getUserData().then(function(data){
+			return data.data.settings.colorPalette;
+		});
+	};
 
 	changeCurrentTheme(newTheme){
 		var theme;

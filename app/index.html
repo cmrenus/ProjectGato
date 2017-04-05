@@ -74,20 +74,24 @@
 					<h3 flex="100">Select Primary Color</h3>
 				    <md-button ng-repeat="color in settingsCtrl.colors" flex-gt-md="15" flex="30"
 				            md-colors="{background: 'default-{{color}}'}" md-colors-watch="false"
-				            ng-disabled="primary === color && !isPrimary" ng-click="settingsCtrl.selectPrimaryTheme(color)">
+				            ng-disabled="primary === color && !isPrimary"
+				            ng-class='{"unselected-color": color !== settingsCtrl.theme.primary}'
+				            ng-click="settingsCtrl.selectPrimaryTheme(color)">
 				      	{{color}}
 				    </md-button>
 
 				    <h3 flex="100">Select Secondary Color</h3>
 				    <md-button ng-repeat="color in settingsCtrl.colors" flex-gt-md="15" flex="30"
 				            md-colors="{background: 'default-{{color}}'}" md-colors-watch="false"
-				            ng-disabled="primary === color && !isPrimary" ng-click="settingsCtrl.selectSecondaryTheme(color)">
+				            ng-disabled="primary === color && !isPrimary" 
+				            ng-class='{"unselected-color": color !== settingsCtrl.theme.accent}'
+				            ng-click="settingsCtrl.selectSecondaryTheme(color)">
 				      	{{color}}
 				    </md-button>
 				    
 				</div>
 				<div layout='row' layout-align='center start'>
-					<md-switch ng-model="settingsCtrl.theme.darkPalette" aria-label="Switch 1">
+					<md-switch ng-model="settingsCtrl.theme.isDark" aria-label="Switch 1">
 					    <h3>Use Dark Palette?</h3>
 					</md-switch>
 				</div>
