@@ -30,13 +30,11 @@ class mainHeaderCtrl{
 		this.toggleRight = this.buildToggler('right');
     this.active = $location.path().split('/')[0];
     
-    this.activeBackgroundColor = colorService.activeBackgroundColor;
+    this.activeBackgroundColor = colorService.getActiveBackgroundColor();
     var vm = this;
     $scope.$watch(function(){return colorService.getActiveBackgroundColor()}, function(newVal, oldVal, scope){
-      console.log(newVal, oldVal);
       if(newVal){
         vm.activeBackgroundColor = newVal;
-        console.log('watch new value');
       }
     }, true);
 	};
@@ -89,7 +87,7 @@ class settingsCtrl {
 
 	saveColor(){
 		this._colorService.changeCurrentTheme({
-			name: this.theme.primary + this.theme.secondary,
+			name: this.theme.primary + '_' + this.theme.secondary,
 			primary: this.theme.primary,
 			accent: this.theme.secondary
 		});
@@ -104,18 +102,12 @@ class colorService {
 		this._$mdColors = $mdColors;
 		this._$rootScope = $rootScope;
 		this._themeProvider = themeProvider;
-		this.current = 'redblue';
+		this.current = 'red_blue';
 
 
 		themeProvider.alwaysWatchTheme(true);
 		themeProvider.generateThemesOnDemand(true);
-		themeProvider.theme('redblue').primaryPalette('red').accentPalette('blue');
-		$mdTheming.generateTheme('redblue');
-		themeProvider.setDefaultTheme('redblue');
-		this._$mdTheming.generateTheme('redblue');
-		var name = $mdTheming.THEMES[$mdTheming.defaultTheme()].colors.accent.name;
-    	var hue = $mdTheming.THEMES[$mdTheming.defaultTheme()].colors.accent.hues.default;
-    	this.activeBackgroundColor = $mdColors.getThemeColor(name + '-' + hue + '-.8');
+		this.changeCurrentTheme({name: this.current, primary: 'red', accent: 'blue'});
 	};
 
 	getActiveBackgroundColor(){
@@ -134,7 +126,6 @@ class colorService {
 		var name = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.name;
     	var hue = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.hues.default;
     	this.activeBackgroundColor = this._$mdColors.getThemeColor(name + '-' + hue + '-.8');
-    	console.log('colorService backgroundCOlor', this.activeBackgroundColor);
 	}
 
 

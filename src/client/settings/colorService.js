@@ -7,18 +7,11 @@ export default class colorService {
 		this._$mdColors = $mdColors;
 		this._$rootScope = $rootScope;
 		this._themeProvider = themeProvider;
-		this.current = 'redblue';
-
+		this.current = 'red_blue';
 
 		themeProvider.alwaysWatchTheme(true);
 		themeProvider.generateThemesOnDemand(true);
-		themeProvider.theme('redblue').primaryPalette('red').accentPalette('blue');
-		$mdTheming.generateTheme('redblue');
-		themeProvider.setDefaultTheme('redblue');
-		this._$mdTheming.generateTheme('redblue');
-		var name = $mdTheming.THEMES[$mdTheming.defaultTheme()].colors.accent.name;
-    	var hue = $mdTheming.THEMES[$mdTheming.defaultTheme()].colors.accent.hues.default;
-    	this.activeBackgroundColor = $mdColors.getThemeColor(name + '-' + hue + '-.8');
+		this.changeCurrentTheme({name: this.current, primary: 'red', accent: 'blue'});
 	};
 
 	getActiveBackgroundColor(){
