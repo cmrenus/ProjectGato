@@ -83,8 +83,14 @@ md-input-container.hide-error-msg .md-errors-spacer {
 	background-color: blue;
 }
 
-
+.overflow-visible {
+	overflow: visible;
+}
 
 .unselected-color {
 	opacity: .4;
+}
+
+md-card-title {
+    flex: initial!important;
 }

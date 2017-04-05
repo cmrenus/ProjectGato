@@ -1,32 +1,40 @@
-<md-content layout="column" flex="100">
-	<div layout="row">
+<md-content class='overflow-visible' layout="column" flex="100">
+	<div layout='row'>
 		<div layout="column" layout-fill layout-align="start center">
 			<h1>Upload New Music</h1>
 			<p>You can upload more music to your library from one of the services below</p>
 		</div>
 	</div>
-	<div layout="row">
-		<md-card flex="33">
-			<img ng-src="./resources/images/spotify.jpg" class="md-card-image" alt="Washed Out">
-			<md-card-title>
-				<md-card-title-text layout-align='start center'>
-					<span class="md-headline"><a href='#/upload/spotify'>Spotify</a></span>
-				</md-card-title-text>
-			</md-card-title>
-		</md-card>
-		<md-card flex="33">
-			<md-card-title>
-				<md-card-title-text layout-align='start center'>
-					<span class="md-headline"><a href=''>Soundcloud</a></span>
-				</md-card-title-text>
-			</md-card-title>
-		</md-card>
-		<md-card flex="33">
-			<md-card-title>
-				<md-card-title-text layout-align='start center'>
-					<span class="md-headline"><a href=''>Youtube</a></span>
-				</md-card-title-text>
-			</md-card-title>
-		</md-card>
+	<div layout="row" layout-padding layout-align='center start'>
+		<div layout='column' flex-gt-xs='25'>
+			<md-card>
+				<img ng-src="./resources/images/spotify.jpg" width="400px" class="md-card-image" alt="Spotify">
+				<md-card-title>
+					<md-card-title-text layout-align='start center'>
+						<span class="md-headline"><a href='#/upload/spotify'>Spotify</a></span>
+					</md-card-title-text>
+				</md-card-title>
+			</md-card>
+		</div>
+		<div layout='column' flex-gt-xs='25'>
+			<md-card>
+				<img src='./resources/images/soundcloud.png' width='400px' class='md-card-image' alt='Soundcloud'>
+				<md-card-title>
+					<md-card-title-text layout-align='start center'>
+						<span class="md-headline"><a href='#/upload/spotify'>Soundcloud</a></span>
+					</md-card-title-text>
+				</md-card-title>
+			</md-card>
+		</div>
+		<div layout='column' flex-gt-xs='25'>
+			<md-card>
+				<img src='./resources/images/YouTube-logo-full_color.png' width='400px' class='md-card-image' alt='Youtube'>
+				<md-card-title>
+					<md-card-title-text layout-align='start center'>
+						<span class="md-headline"><a href=''>Youtube</a></span>
+					</md-card-title-text>
+				</md-card-title>
+			</md-card>
+		</div>
 	</div>
 </md-content>
