@@ -14,7 +14,7 @@ export default class colorService {
 		userService.getUserData().then(function(data){
 			var colorPalette = data.data.settings.colorPalette;
 			vm.current = colorPalette.name;
-			vm.changeCurrentTheme({name: vm.current, primary: colorPalette.primary, accent: colorPalette.accent});
+			vm.changeCurrentTheme({name: vm.current, primary: colorPalette.primary, accent: colorPalette.accent, isDark: colorPalette.isDark});
 		},
 		function(err){
 			console.log(err);
@@ -28,9 +28,19 @@ export default class colorService {
 	}
 
 	changeCurrentTheme(newTheme){
-		var theme = this._themeProvider.theme(newTheme.name)
-		.primaryPalette(newTheme.primary)
-		.accentPalette(newTheme.accent);
+		var theme;
+		if(newTheme.isDark){
+			theme = this._themeProvider.theme(newTheme.name)
+						.primaryPalette(newTheme.primary)
+						.accentPalette(newTheme.accent)
+						.dark();
+		}
+		else{
+			theme = this._themeProvider.theme(newTheme.name)
+						.primaryPalette(newTheme.primary)
+						.accentPalette(newTheme.accent);
+		}
+		
 		this._$mdTheming.generateTheme(newTheme.name);
 		this._themeProvider.setDefaultTheme(newTheme.name);
 		this._$mdTheming.THEMES[newTheme.name] = theme;

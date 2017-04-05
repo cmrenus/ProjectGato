@@ -84,6 +84,12 @@
 				            ng-disabled="primary === color && !isPrimary" ng-click="settingsCtrl.selectSecondaryTheme(color)">
 				      	{{color}}
 				    </md-button>
+				    
+				</div>
+				<div layout='row' layout-align='center start'>
+					<md-switch ng-model="settingsCtrl.theme.darkPalette" aria-label="Switch 1">
+					    <h3>Use Dark Palette?</h3>
+					</md-switch>
 				</div>
 				<div layout="row" layout-align="center start">
 					<md-button ng-click="settingsCtrl.saveColor()" class="md-primary">

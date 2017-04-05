@@ -1,6 +1,6 @@
-<div layout="column" flex>
+<md-content layout="column" flex>
 	<div layout='row'>
-		<md-tabs md-selected="currentTab" md-border-bottom md-stretch-tabs flex>
+		<md-tabs md-selected="currentTab" md-stretch-tabs md-dynamic-height md-border-bottom flex>
 			<md-tab id='playlists-tab' aria-controls="playlists-tab-content" label="playlists">
 			</md-tab>
 			<md-tab id='artists-tab' aria-controls="artists-tab-content" label='artists'>
@@ -26,16 +26,16 @@
 				</md-nav-item>
 			</md-nav-bar>
 			-->
-		<span flex></span>
+		<span flex='nogrow'></span>
 		
 		<md-button class="md-icon-button searchbar-search-button" ng-click="searchbar.search(searchbar.searchQuery); searchbar.searchOpen = true;" aria-label="search">
 			<md-icon md-font-icon="search">search</md-icon>
 		</md-button>
 
 		<!--<md-button class="btn-small" ng-click="searchbar.search(searchbar.searchQuery); searchbar.searchOpen = true;"><i class="material-icons">search</i></md-button>-->
-	  	<md-input-container ng-class="{'search-open': searchbar.searchOpen}" class="hide-error-msg search-bar">
-			<label>Search</label>
-			<input type="text" id="search-input" ng-model="searchbar.searchQuery">
+	  	<md-input-container ng-class="{'search-open': searchbar.searchOpen}" md-no-float class="hide-error-msg search-bar">
+			<!--<label>Search</label>-->
+			<input type="text" id="search-input" ng-model="searchbar.searchQuery" placeholder='Search'>
 			<md-button class="close-button md-icon-button" ng-click="searchbar.searchOpen=false"><i class="material-icons">close</i></md-button>
 	  	</md-input-container>
 	</div>
@@ -56,4 +56,4 @@
 			</div>
 		</ng-switch>
 	</md-content>
-</div>
+</md-content>

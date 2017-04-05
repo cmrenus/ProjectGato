@@ -21,7 +21,8 @@ class settingsCtrl {
 		this._colorService.changeCurrentTheme({
 			name: this.theme.primary + '_' + this.theme.secondary,
 			primary: this.theme.primary,
-			accent: this.theme.secondary
+			accent: this.theme.secondary,
+			isDark: this.theme.darkPalette
 		});
 	};
 }
