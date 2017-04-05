@@ -210,6 +210,9 @@ rootCtrl.$inject = ['colorService', '$scope'];
 		.when('/music/playlists', {
 			templateUrl: './client/music/musicPage.html'
 		})
+		.when('/upload/spotify', {
+			templateUrl: './client/upload/uploadSpotify.html'
+		})
 		.when('/upload', {
 			templateUrl: './client/upload/uploadExternalSources.html'
 		});
