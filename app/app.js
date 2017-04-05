@@ -86,6 +86,7 @@ class settingsCtrl {
 	};
 
 	saveColor(){
+		console.log(this.theme);
 		this._colorService.changeCurrentTheme({
 			name: this.theme.primary + '_' + this.theme.secondary,
 			primary: this.theme.primary,
@@ -126,12 +127,14 @@ class colorService {
 	changeCurrentTheme(newTheme){
 		var theme;
 		if(newTheme.isDark){
+			newTheme.name = newTheme.name + '_dark';
 			theme = this._themeProvider.theme(newTheme.name)
 						.primaryPalette(newTheme.primary)
 						.accentPalette(newTheme.accent)
 						.dark();
 		}
 		else{
+			newTheme.name = newTheme.name + '_light';
 			theme = this._themeProvider.theme(newTheme.name)
 						.primaryPalette(newTheme.primary)
 						.accentPalette(newTheme.accent);

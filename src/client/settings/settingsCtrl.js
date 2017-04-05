@@ -18,6 +18,7 @@ class settingsCtrl {
 	};
 
 	saveColor(){
+		console.log(this.theme)
 		this._colorService.changeCurrentTheme({
 			name: this.theme.primary + '_' + this.theme.secondary,
 			primary: this.theme.primary,
