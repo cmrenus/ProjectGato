@@ -96,18 +96,26 @@ class settingsCtrl {
 settingsCtrl.$inject = ['$mdColorPalette', 'colorService'];
 
 class colorService {
-	constructor($mdTheming, themeProvider, $mdColors, $rootScope){
+	constructor($mdTheming, themeProvider, $mdColors, $rootScope, userService){
 		'ngInject';
 		this._$mdTheming = $mdTheming;
 		this._$mdColors = $mdColors;
 		this._$rootScope = $rootScope;
 		this._themeProvider = themeProvider;
-		this.current = 'red_blue';
-
-
+		this.current = '';
 		themeProvider.alwaysWatchTheme(true);
 		themeProvider.generateThemesOnDemand(true);
-		this.changeCurrentTheme({name: this.current, primary: 'red', accent: 'blue'});
+		var vm = this;
+		userService.getUserData().then(function(data){
+			var colorPalette = data.data.settings.colorPalette;
+			vm.current = colorPalette.name;
+			vm.changeCurrentTheme({name: vm.current, primary: colorPalette.primary, accent: colorPalette.accent});
+		},
+		function(err){
+
+		});
+
+		
 	};
 
 	getActiveBackgroundColor(){
@@ -131,7 +139,20 @@ class colorService {
 
 }
 
-colorService.$inject = ['$mdTheming', 'themeProvider', '$mdColors', '$rootScope'];
+colorService.$inject = ['$mdTheming', 'themeProvider', '$mdColors', '$rootScope', 'userService'];
+
+class userService {
+	constructor($http){
+		'ngInject';
+		this._$http = $http;
+	};
+
+	getUserData(){
+		return this._$http.get('./data/user.json')
+	}
+}
+
+userService.$inject = ['$http'];
 
 class rootCtrl {
 	constructor(colorService, $scope){
@@ -162,6 +183,7 @@ rootCtrl.$inject = ['colorService', '$scope'];
 	angular.module('ProjectGato', ['ngAnimate', 'ngRoute', 'ngMaterial'])
 	.config(config)
 	.service('colorService', colorService)
+	.service('userService', userService)
 	.controller('mainHeaderCtrl', mainHeaderCtrl)
 	.controller('settingsCtrl', settingsCtrl)
 	.controller('rootCtrl', rootCtrl);

@@ -15,6 +15,7 @@ import ngMaterial from 'angular-material';
 import mainHeaderCtrl from './client/header/mainHeaderCtrl';
 import settingsCtrl from './client/settings/settingsCtrl';
 import colorService from './client/settings/colorService';
+import userService from './client/user/userService';
 import rootCtrl from './client/root/rootCtrl';
 
 (function(){
@@ -23,6 +24,7 @@ import rootCtrl from './client/root/rootCtrl';
 	angular.module('ProjectGato', ['ngAnimate', 'ngRoute', 'ngMaterial'])
 	.config(config)
 	.service('colorService', colorService)
+	.service('userService', userService)
 	.controller('mainHeaderCtrl', mainHeaderCtrl)
 	.controller('settingsCtrl', settingsCtrl)
 	.controller('rootCtrl', rootCtrl);

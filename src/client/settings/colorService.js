@@ -1,17 +1,26 @@
 
 
 export default class colorService {
-	constructor($mdTheming, themeProvider, $mdColors, $rootScope){
+	constructor($mdTheming, themeProvider, $mdColors, $rootScope, userService){
 		'ngInject';
 		this._$mdTheming = $mdTheming;
 		this._$mdColors = $mdColors;
 		this._$rootScope = $rootScope;
 		this._themeProvider = themeProvider;
-		this.current = 'red_blue';
-
+		this.current = '';
 		themeProvider.alwaysWatchTheme(true);
 		themeProvider.generateThemesOnDemand(true);
-		this.changeCurrentTheme({name: this.current, primary: 'red', accent: 'blue'});
+		var vm = this;
+		userService.getUserData().then(function(data){
+			var colorPalette = data.data.settings.colorPalette;
+			vm.current = colorPalette.name;
+			vm.changeCurrentTheme({name: vm.current, primary: colorPalette.primary, accent: colorPalette.accent});
+		},
+		function(err){
+			console.log(err);
+		});
+
+		
 	};
 
 	getActiveBackgroundColor(){
@@ -35,4 +44,4 @@ export default class colorService {
 
 }
 
-colorService.$inject = ['$mdTheming', 'themeProvider', '$mdColors', '$rootScope'];
+colorService.$inject = ['$mdTheming', 'themeProvider', '$mdColors', '$rootScope', 'userService'];

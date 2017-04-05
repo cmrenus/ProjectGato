@@ -1,0 +1,10 @@
+{
+	"settings": {
+		"colorPalette": {
+			"name": "pink_blue",
+			"primary": "pink",
+			"accent": "blue",
+			"isDark": false
+		}
+	}
+}
