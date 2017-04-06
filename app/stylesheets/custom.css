@@ -94,3 +94,8 @@ md-input-container.hide-error-msg .md-errors-spacer {
 md-card-title {
     flex: initial!important;
 }
+
+.inline-icon {
+	line-height: inherit;
+	vertical-align: middle;
+}
