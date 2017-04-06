@@ -12,6 +12,7 @@ class settingsCtrl {
 
 	init(vm){
 		this._colorService.getCurrentColors().then(function(data){
+			console.log('getCurrentColors', data);
 			vm.theme = data;
 		});
 	};
@@ -26,9 +27,15 @@ class settingsCtrl {
 	};
 
 	saveColor(){
-		console.log(this.theme)
+		console.log('saveColor', this.theme)
+		if(this.theme.isDark){
+			this.theme.name = this.theme.primary + '_' + this.theme.accent + '_dark';
+		}
+		else{
+			this.theme.name = this.theme.primary + '_' + this.theme.accent + '_light';
+		}
 		this._colorService.changeCurrentTheme({
-			name: this.theme.primary + '_' + this.theme.accent,
+			name: this.theme.name,
 			primary: this.theme.primary,
 			accent: this.theme.accent,
 			isDark: this.theme.isDark

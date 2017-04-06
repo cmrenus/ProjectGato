@@ -1,0 +1,10 @@
+{
+  "settings": {
+    "colorPalette": {
+      "name": "pink_cyan_dark",
+      "primary": "pink",
+      "accent": "cyan",
+      "isDark": true
+    }
+  }
+}

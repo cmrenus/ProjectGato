@@ -80,6 +80,7 @@ class settingsCtrl {
 
 	init(vm){
 		this._colorService.getCurrentColors().then(function(data){
+			console.log('getCurrentColors', data);
 			vm.theme = data;
 		});
 	};
@@ -94,9 +95,15 @@ class settingsCtrl {
 	};
 
 	saveColor(){
-		console.log(this.theme);
+		console.log('saveColor', this.theme);
+		if(this.theme.isDark){
+			this.theme.name = this.theme.primary + '_' + this.theme.accent + '_dark';
+		}
+		else{
+			this.theme.name = this.theme.primary + '_' + this.theme.accent + '_light';
+		}
 		this._colorService.changeCurrentTheme({
-			name: this.theme.primary + '_' + this.theme.accent,
+			name: this.theme.name,
 			primary: this.theme.primary,
 			accent: this.theme.accent,
 			isDark: this.theme.isDark
@@ -118,8 +125,8 @@ class colorService {
 		themeProvider.alwaysWatchTheme(true);
 		themeProvider.generateThemesOnDemand(true);
 		var vm = this;
-		userService.getUserData().then(function(data){
-			var colorPalette = data.data.settings.colorPalette;
+		this.getCurrentColors().then(data => {
+			var colorPalette = data;
 			vm.current = colorPalette.name;
 			vm.changeCurrentTheme({name: vm.current, primary: colorPalette.primary, accent: colorPalette.accent, isDark: colorPalette.isDark});
 		},
@@ -127,7 +134,6 @@ class colorService {
 			console.log(err);
 		});
 
-		
 	};
 
 	getActiveBackgroundColor(){
@@ -135,35 +141,44 @@ class colorService {
 	}
 
 	getCurrentColors(){
-		return this._userService.getUserData().then(function(data){
-			return data.data.settings.colorPalette;
+		return this._userService.getUserData().then((data) => {
+			console.log('in getCurrenColors', data);
+			return data.settings.colorPalette;
 		});
 	};
 
 	changeCurrentTheme(newTheme){
+		console.log('changingCurrentColor', newTheme);
 		var theme;
 		if(newTheme.isDark){
-			newTheme.name = newTheme.name + '_dark';
+			newTheme.name = newTheme.name;
 			theme = this._themeProvider.theme(newTheme.name)
 						.primaryPalette(newTheme.primary)
 						.accentPalette(newTheme.accent)
 						.dark();
 		}
 		else{
-			newTheme.name = newTheme.name + '_light';
+			newTheme.name = newTheme.name;
 			theme = this._themeProvider.theme(newTheme.name)
 						.primaryPalette(newTheme.primary)
 						.accentPalette(newTheme.accent);
 		}
-		
-		this._$mdTheming.generateTheme(newTheme.name);
-		this._themeProvider.setDefaultTheme(newTheme.name);
-		this._$mdTheming.THEMES[newTheme.name] = theme;
-		this._$mdTheming.generateTheme(newTheme.name);
-		this.current = newTheme.name;	
-		var name = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.name;
-    	var hue = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.hues.default;
-    	this.activeBackgroundColor = this._$mdColors.getThemeColor(name + '-' + hue + '-.8');
+		try{
+			this._$mdTheming.generateTheme(newTheme.name);
+			this._themeProvider.setDefaultTheme(newTheme.name);
+			this._$mdTheming.THEMES[newTheme.name] = theme;
+			this._$mdTheming.generateTheme(newTheme.name);
+			console.log('generate ' + newTheme.name);
+			this.current = newTheme.name;	
+			var name = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.name;
+	    	var hue = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.hues.default;
+	    	this.activeBackgroundColor = this._$mdColors.getThemeColor(name + '-' + hue + '-.8');
+	    	console.log(this.activeBackgroundColor);
+	    	this._userService.saveColorSettings(newTheme);
+	    }
+	    catch(err){
+	    	console.log(err);
+	    }
 	}
 
 
@@ -175,11 +190,35 @@ class userService {
 	constructor($http){
 		'ngInject';
 		this._$http = $http;
+		this.data;
+		//this._jetpack = jetpack;
+
+		this.getUserData().then((data) => {
+			this.data = data;
+		});
 	};
 
 	getUserData(){
-		return this._$http.get('./data/user.json')
+		/*return jetpack.readAsync('./data/user.json').then(data => {
+			return JSON.parse(data);
+		});*/
+		return this._$http.get('../data/user.json').then(data => {
+			return data.data;
+		});
 	}
+
+	saveColorSettings(theme){
+		this.data.settings.colorPalette = theme;
+		//console.log(this.data);
+		console.log('saving Color Settings');
+		try {
+			jetpack.write('./data/user.json', this.data);
+		}
+		catch(err){
+			console.log('error');
+			console.log(err);
+		}
+	};
 }
 
 userService.$inject = ['$http'];

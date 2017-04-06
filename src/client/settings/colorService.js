@@ -12,8 +12,8 @@ export default class colorService {
 		themeProvider.alwaysWatchTheme(true);
 		themeProvider.generateThemesOnDemand(true);
 		var vm = this;
-		userService.getUserData().then(function(data){
-			var colorPalette = data.data.settings.colorPalette;
+		this.getCurrentColors().then(data => {
+			var colorPalette = data;
 			vm.current = colorPalette.name;
 			vm.changeCurrentTheme({name: vm.current, primary: colorPalette.primary, accent: colorPalette.accent, isDark: colorPalette.isDark});
 		},
@@ -21,7 +21,6 @@ export default class colorService {
 			console.log(err);
 		});
 
-		
 	};
 
 	getActiveBackgroundColor(){
@@ -29,35 +28,44 @@ export default class colorService {
 	}
 
 	getCurrentColors(){
-		return this._userService.getUserData().then(function(data){
-			return data.data.settings.colorPalette;
+		return this._userService.getUserData().then((data) => {
+			console.log('in getCurrenColors', data);
+			return data.settings.colorPalette;
 		});
 	};
 
 	changeCurrentTheme(newTheme){
+		console.log('changingCurrentColor', newTheme);
 		var theme;
 		if(newTheme.isDark){
-			newTheme.name = newTheme.name + '_dark';
+			newTheme.name = newTheme.name;
 			theme = this._themeProvider.theme(newTheme.name)
 						.primaryPalette(newTheme.primary)
 						.accentPalette(newTheme.accent)
 						.dark();
 		}
 		else{
-			newTheme.name = newTheme.name + '_light';
+			newTheme.name = newTheme.name;
 			theme = this._themeProvider.theme(newTheme.name)
 						.primaryPalette(newTheme.primary)
 						.accentPalette(newTheme.accent);
 		}
-		
-		this._$mdTheming.generateTheme(newTheme.name);
-		this._themeProvider.setDefaultTheme(newTheme.name);
-		this._$mdTheming.THEMES[newTheme.name] = theme;
-		this._$mdTheming.generateTheme(newTheme.name);
-		this.current = newTheme.name;	
-		var name = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.name;
-    	var hue = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.hues.default;
-    	this.activeBackgroundColor = this._$mdColors.getThemeColor(name + '-' + hue + '-.8');
+		try{
+			this._$mdTheming.generateTheme(newTheme.name);
+			this._themeProvider.setDefaultTheme(newTheme.name);
+			this._$mdTheming.THEMES[newTheme.name] = theme;
+			this._$mdTheming.generateTheme(newTheme.name);
+			console.log('generate ' + newTheme.name);
+			this.current = newTheme.name;	
+			var name = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.name;
+	    	var hue = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.hues.default;
+	    	this.activeBackgroundColor = this._$mdColors.getThemeColor(name + '-' + hue + '-.8');
+	    	console.log(this.activeBackgroundColor);
+	    	this._userService.saveColorSettings(newTheme);
+	    }
+	    catch(err){
+	    	console.log(err);
+	    }
 	}
 
 
