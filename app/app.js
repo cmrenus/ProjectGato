@@ -271,6 +271,15 @@ rootCtrl.$inject = ['colorService', '$scope'];
 		.when('/upload/spotify', {
 			templateUrl: './client/upload/uploadSpotify.html'
 		})
+		.when('/upload/soundcloud', {
+			templateUrl: './client/upload/uploadSoundcloud.html'
+		})
+		.when('/upload/youtube', {
+			templateUrl: './client/upload/uploadYoutube.html'
+		})
+		.when('/upload/localFiles', {
+			templateUrl: './client/upload/uploadLocalFiles.html'
+		})
 		.when('/upload', {
 			templateUrl: './client/upload/uploadExternalSources.html'
 		});
