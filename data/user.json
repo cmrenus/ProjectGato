@@ -1,10 +1,10 @@
 {
   "settings": {
     "colorPalette": {
-      "name": "pink_blue-grey_dark",
-      "primary": "pink",
+      "name": "orange_blue-grey_light",
+      "primary": "orange",
       "accent": "blue-grey",
-      "isDark": true
+      "isDark": false
     }
   }
 }

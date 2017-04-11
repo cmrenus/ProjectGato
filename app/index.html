@@ -5,10 +5,12 @@
 		<link rel="stylesheet" type="text/css" href='./node_modules/angular-material/angular-material.min.css'>
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="./stylesheets/custom.css">
+		<link rel="stylesheet" type="text/css" href="./stylesheets/main.css">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 	</head>
 
-	<body ng-app="ProjectGato" ng-controller="rootCtrl" md-theme="{{theme}}">
+	<body flex layout="column" ng-app="ProjectGato" ng-controller="rootCtrl" md-theme="{{theme}}">
 		<md-toolbar class="md-hue-2" ng-cloak ng-controller="mainHeaderCtrl as mainHeaderCtrl">
 			<div class="md-toolbar-tools">
 				<md-button href="#/music/playlists" ng-class="{active: mainHeaderCtrl.active === 'music'}" ng-style='mainHeaderCtrl.active === "music" && {"background-color": mainHeaderCtrl.activeBackgroundColor}' ng-click="mainHeaderCtrl.clickTab('music')" class="md-button main-nav-button">
@@ -108,7 +110,34 @@
 			</md-content>
 
 		</md-sidenav>
-		<div id='content' ng-view layout></div>
+		<md-content flex layout="column">
+			<div flex id='content' ng-view layout></div>
+			<md-content class="music-bar">
+				<md-content class="md-primary md-hue-2 music-tracker">
+
+				</md-content>
+				<div class="music-controls-container">
+					<div class="music-info">
+						<img src="./resources/images/albumPlaceHolder.png"/>
+						<div class="music-title-artist">
+							<h4>Song title</h4>
+							<p>Song artist - Album</p>
+						</div>
+					</div>
+					<div class="music-controls">
+						<i class="material-icons small">repeat</i>
+						<i class="material-icons small">skip_previous</i>
+						<i class="material-icons large">play_circle_filled</i>
+						<i class="material-icons small">skip_next</i>
+						<i class="material-icons small">shuffle</i>
+					</div>
+					<div class="music-extras">
+
+					</div>
+				</div>
+			</md-content>
+		</md-content>
+
 	</body>
 	
 	<script type="text/javascript" src='app.js'></script>

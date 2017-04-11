@@ -1,22 +1,54 @@
-html,
-body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-body {
+.music-bar {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  height: 100px !important;
+}
+.music-bar .music-tracker {
+  height: 10px;
+}
+.music-bar .music-controls-container {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+.music-bar .music-controls-container .music-info {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+.music-bar .music-controls-container .music-info img {
+  height: 90px;
+  width: 90px;
+}
+.music-bar .music-controls-container .music-info .music-title-artist {
+  margin-left: 10px;
+}
+.music-bar .music-controls-container .music-info .music-title-artist h4 {
+  margin-bottom: 4px;
+}
+.music-bar .music-controls-container .music-info .music-title-artist p {
+  margin-top: 0;
+}
+.music-bar .music-controls-container .music-controls {
   align-items: center;
-  font-family: sans-serif;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex: 2;
 }
-a {
-  text-decoration: none;
+.music-bar .music-controls-container .music-controls i {
+  margin: 0 10px;
 }
-.container {
-  text-align: center;
+.music-bar .music-controls-container .music-controls i:hover {
+  cursor: pointer;
 }
-.subtitle {
-  color: gray;
+.music-bar .music-controls-container .music-controls i.small {
+  font-size: 30px;
+}
+.music-bar .music-controls-container .music-controls i.large {
+  font-size: 65px;
+}
+.music-bar .music-controls-container .music-extras {
+  flex: 1;
 }
