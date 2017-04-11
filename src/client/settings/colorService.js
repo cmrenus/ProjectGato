@@ -29,13 +29,17 @@ export default class colorService {
 
 	getCurrentColors(){
 		return this._userService.getUserData().then((data) => {
-			console.log('in getCurrenColors', data);
 			return data.settings.colorPalette;
 		});
 	};
 
+	getThemeColor(theme, hueName){
+		var name = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors[theme].name;
+	    var hue = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors[theme].hues[hueName];
+	    return this._$mdColors.getThemeColor(name + '-' + hue + '-1');
+	}
+
 	changeCurrentTheme(newTheme){
-		console.log('changingCurrentColor', newTheme);
 		var theme;
 		if(newTheme.isDark){
 			newTheme.name = newTheme.name;
@@ -55,8 +59,8 @@ export default class colorService {
 			this._themeProvider.setDefaultTheme(newTheme.name);
 			this._$mdTheming.THEMES[newTheme.name] = theme;
 			this._$mdTheming.generateTheme(newTheme.name);
-			console.log('generate ' + newTheme.name);
-			this.current = newTheme.name;	
+			this.current = newTheme.name;
+			console.log('DEFAULT THEME', this._$mdTheming.defaultTheme());
 			var name = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.name;
 	    	var hue = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.hues.default;
 	    	this.activeBackgroundColor = this._$mdColors.getThemeColor(name + '-' + hue + '-.8');

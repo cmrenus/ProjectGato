@@ -142,13 +142,17 @@ class colorService {
 
 	getCurrentColors(){
 		return this._userService.getUserData().then((data) => {
-			console.log('in getCurrenColors', data);
 			return data.settings.colorPalette;
 		});
 	};
 
+	getThemeColor(theme, hueName){
+		var name = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors[theme].name;
+	    var hue = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors[theme].hues[hueName];
+	    return this._$mdColors.getThemeColor(name + '-' + hue + '-1');
+	}
+
 	changeCurrentTheme(newTheme){
-		console.log('changingCurrentColor', newTheme);
 		var theme;
 		if(newTheme.isDark){
 			newTheme.name = newTheme.name;
@@ -168,8 +172,8 @@ class colorService {
 			this._themeProvider.setDefaultTheme(newTheme.name);
 			this._$mdTheming.THEMES[newTheme.name] = theme;
 			this._$mdTheming.generateTheme(newTheme.name);
-			console.log('generate ' + newTheme.name);
-			this.current = newTheme.name;	
+			this.current = newTheme.name;
+			console.log('DEFAULT THEME', this._$mdTheming.defaultTheme());
 			var name = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.name;
 	    	var hue = this._$mdTheming.THEMES[this._$mdTheming.defaultTheme()].colors.accent.hues.default;
 	    	this.activeBackgroundColor = this._$mdColors.getThemeColor(name + '-' + hue + '-.8');
@@ -241,6 +245,38 @@ class rootCtrl {
 
 rootCtrl.$inject = ['colorService', '$scope'];
 
+class musicControlsCtrl {
+	constructor(colorService, $scope){
+		'ngInject';
+		this.primaryColor = colorService.getThemeColor('primary', 'default');
+		this.accentColor = colorService.getThemeColor('accent', 'default');
+		this.status = 'paused';
+		this.volume = 35;
+		var vm = this;
+		$scope.$watch(function(){return colorService.getThemeColor('primary', 'default')}, function(newVal, oldVal, scope){
+	      if(newVal){
+	        vm.primaryColor = newVal;
+	      }
+	    }, true);
+
+		$scope.$watch(function(){return colorService.getThemeColor('accent', 'default')}, function(newVal, oldVal, scope){
+	      if(newVal){
+	        vm.accentColor = newVal;
+	      }
+	    }, true);	    
+	};
+
+	play(){
+		this.status = 'playing';
+	}
+
+	pause(){
+		this.status = 'paused';
+	}
+}
+
+musicControlsCtrl.$inject = ['colorService', '$scope'];
+
 // Here is the starting point for your application code.
 // All stuff below is just to show you how it works. You can delete all of it.
 
@@ -255,7 +291,8 @@ rootCtrl.$inject = ['colorService', '$scope'];
 	.service('userService', userService)
 	.controller('mainHeaderCtrl', mainHeaderCtrl)
 	.controller('settingsCtrl', settingsCtrl)
-	.controller('rootCtrl', rootCtrl);
+	.controller('rootCtrl', rootCtrl)
+	.controller('musicControlsCtrl', musicControlsCtrl);
 	
 
 	config.$inject = ['$routeProvider', '$mdThemingProvider', '$mdColorPalette', '$provide'];

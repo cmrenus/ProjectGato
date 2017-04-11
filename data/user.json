@@ -1,9 +1,9 @@
 {
   "settings": {
     "colorPalette": {
-      "name": "orange_blue-grey_light",
-      "primary": "orange",
-      "accent": "blue-grey",
+      "name": "pink_blue_light",
+      "primary": "pink",
+      "accent": "blue",
       "isDark": false
     }
   }

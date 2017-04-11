@@ -99,3 +99,12 @@ md-card-title {
 	line-height: inherit;
 	vertical-align: middle;
 }
+
+.progress-bar-container{
+	height: 5px;
+	background-color: #757575;
+}
+
+.progress-bar {
+	height: 5px;
+}

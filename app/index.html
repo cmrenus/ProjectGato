@@ -110,12 +110,14 @@
 			</md-content>
 
 		</md-sidenav>
-		<md-content flex layout="column">
+		<md-content flex layout="column" ng-controller='musicControlsCtrl as musicControls'>
 			<div flex id='content' ng-view layout></div>
 			<md-content class="music-bar">
-				<md-content class="md-primary md-hue-2 music-tracker">
+				<div class='progress-bar-container'>
+					<div flex='25' class='progress-bar' ng-style='{"background-color": musicControls.primaryColor}'>
 
-				</md-content>
+					</div>
+				</div>
 				<div class="music-controls-container">
 					<div class="music-info">
 						<img src="./resources/images/albumPlaceHolder.png"/>
@@ -126,13 +128,20 @@
 					</div>
 					<div class="music-controls">
 						<i class="material-icons small">repeat</i>
-						<i class="material-icons small">skip_previous</i>
-						<i class="material-icons large">play_circle_filled</i>
-						<i class="material-icons small">skip_next</i>
+						<i class="material-icons small" ng-style='{color: musicControls.accentColor}'>skip_previous</i>
+						<i class="material-icons large" ng-if='musicControls.status === "paused"' ng-click='musicControls.play()' ng-style='{color: musicControls.accentColor}'>play_circle_filled</i>
+						<i class='material-icons large' ng-if='musicControls.status === "playing"' ng-click='musicControls.pause()' ng-style='{color: musicControls.accentColor}'>pause_circle_filled</i>
+						<i class="material-icons small" ng-style='{color: musicControls.accentColor}'>skip_next</i>
 						<i class="material-icons small">shuffle</i>
 					</div>
-					<div class="music-extras">
+					<div class="music-extras inline-container" layout='row' layout-align='center center'>
+						<i ng-if='musicControls.volume === 0' class='material-icons'>volume_mute</i>
+						<i ng-if='musicControls.volume > 0 && musicControls.volume < 50' class='material-icons'>volume_down</i>
+						<i ng-if='musicControls.volume >= 50' class='material-icons'>volume_up</i>
 
+						<md-slider class="md-primary" ng-model="musicControls.volume" step="1" min="0" max="100" aria-label="rating">
+      					</md-slider>
+						<md-button>Lyrics</md-button>
 					</div>
 				</div>
 			</md-content>

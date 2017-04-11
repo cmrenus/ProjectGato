@@ -17,6 +17,7 @@ import settingsCtrl from './client/settings/settingsCtrl';
 import colorService from './client/settings/colorService';
 import userService from './client/user/userService';
 import rootCtrl from './client/root/rootCtrl';
+import musicControlsCtrl from './client/music/musicControlsCtrl';
 
 (function(){
 	"use strict";
@@ -27,7 +28,8 @@ import rootCtrl from './client/root/rootCtrl';
 	.service('userService', userService)
 	.controller('mainHeaderCtrl', mainHeaderCtrl)
 	.controller('settingsCtrl', settingsCtrl)
-	.controller('rootCtrl', rootCtrl);
+	.controller('rootCtrl', rootCtrl)
+	.controller('musicControlsCtrl', musicControlsCtrl);
 	
 
 	config.$inject = ['$routeProvider', '$mdThemingProvider', '$mdColorPalette', '$provide'];
