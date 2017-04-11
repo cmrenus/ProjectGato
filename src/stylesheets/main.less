@@ -4,8 +4,12 @@
     flex-direction: column;
     height: 100px !important;
 
-    .music-tracker {
-        height: 10px;
+    .progress-bar-container {
+        height: 6px;
+
+        .progress-bar {
+            height: 100%;
+        }
     }
 
     .music-controls-container {
@@ -14,13 +18,15 @@
         flex: 1;
 
         .music-info {
+            align-items: center;
             display: flex;
+            // justify-content: center;
             flex-direction: row;
             flex: 1;
 
             img {
-                height: 90px;
-                width: 90px;
+                height: 94px;
+                width: 94px;
             }
 
             .music-title-artist {

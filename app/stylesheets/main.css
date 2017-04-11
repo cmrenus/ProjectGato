@@ -4,8 +4,11 @@
   flex-direction: column;
   height: 100px !important;
 }
-.music-bar .music-tracker {
-  height: 10px;
+.music-bar .progress-bar-container {
+  height: 6px;
+}
+.music-bar .progress-bar-container .progress-bar {
+  height: 100%;
 }
 .music-bar .music-controls-container {
   display: flex;
@@ -13,13 +16,14 @@
   flex: 1;
 }
 .music-bar .music-controls-container .music-info {
+  align-items: center;
   display: flex;
   flex-direction: row;
   flex: 1;
 }
 .music-bar .music-controls-container .music-info img {
-  height: 90px;
-  width: 90px;
+  height: 94px;
+  width: 94px;
 }
 .music-bar .music-controls-container .music-info .music-title-artist {
   margin-left: 10px;
