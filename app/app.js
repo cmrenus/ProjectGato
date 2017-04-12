@@ -249,32 +249,8 @@ var jsmediatags = require('jsmediatags');
 var fs = require('fs');
 var jetpack$1 = require('fs-jetpack');
 var { dialog, app } = require('electron').remote;
+var Song = require('../src/classes/song.js').Song;
 
-var Song = function(data, path) {
-    this.artist = data.artist || 'Unknown Artist';
-    this.album = data.album || 'Unknown Album';
-    this.title = data.title || 'Unknown Title';
-    this.track = parseInt(data.track) || 0;
-
-    var image = data.picture;
-    if(image) {
-        var base64String = "";
-        for (var i = 0; i < image.data.length; i++) {
-            base64String += String.fromCharCode(image.data[i]);
-        }
-        var base64 = "data:" + image.format + ";base64," +
-                window.btoa(base64String);
-        this.picture = base64;
-    }
-    else {
-        this.picture = './img/albumPlaceHolder.png';
-    }
-    // this.number = data.track.no;
-    // this.albumImg = data.picture[0].data;
-    // this.albumImgExtension = data.picture[0].format;
-
-    this.path = path;
-};
 
 class musicControlsCtrl {
 	constructor(colorService, $scope){
@@ -289,8 +265,12 @@ class musicControlsCtrl {
 		this.accentColor = colorService.getThemeColor('accent', 'default');
 		this.status = 'paused';
 		this.volume = 35;
-		this.library = [];
+		this.library;
+		this.index = 0;
+		this.player = document.getElementById('music-player');
+		this.currentSong = null;
 		var vm = this;
+
 		$scope.$watch(function(){return colorService.getThemeColor('primary', 'default')}, function(newVal, oldVal, scope){
 	      if(newVal){
 	        vm.primaryColor = newVal;
@@ -301,19 +281,68 @@ class musicControlsCtrl {
 	      if(newVal){
 	        vm.accentColor = newVal;
 	      }
-	    }, true);	    
+	    }, true);
+
+		this.getLibrary();
 	};
 
+	getLibrary() {
+		/*return jetpack.readAsync('./data/user.json').then(data => {
+			return JSON.parse(data);
+		});*/
+		this.library = JSON.parse(jetpack$1.read('./data/library.json'));
+		if(this.library) {
+			this.currentSong = this.library[0];
+		}
+		else {
+			console.log('No existing library');
+			this.library = [];
+		}
+	}
+
 	play(){
-		this.status = 'playing';
+		var musicController = this;
+		if(this.currentSong.path) {
+			window.setTimeout(function() {
+				musicController.player.play();
+			},0);
+			this.status = 'playing';
+		}
 	}
 
 	pause(){
+		this.player.pause();
 		this.status = 'paused';
 	}
 
+	next() {
+		if(this.index < this.library.length -1) {
+			this.index++;
+		}
+		else {
+			this.index = 0;
+		}
+
+		this.currentSong = this.library[this.index];
+		this.pause();
+		this.play();
+	}
+
+	prev() {
+		if(this.index > 0) {
+			this.index--;
+		}
+		else {
+			this.index = this.library.length - 1;
+		}
+
+		this.currentSong = this.library[this.index];
+		this.pause();
+		this.play();
+	}
+
 	getMusicData(path) {
-			//Setting a variable for the application
+			//Setting a variable for the controller
 			var musicController = this;
 			//Hands back a promise to be resolved
 			return new Promise(function(resolve, reject) {
@@ -370,6 +399,8 @@ class musicControlsCtrl {
 						//This checks all of the promises that were added to our promise array
 						Promise.all(promises).then(function() {
 								console.log(musicController.library);
+								musicController.currentSong = musicController.library[0];
+								jetpack$1.write('./data/library.json', musicController.library);
 						});
 				});
 		});
