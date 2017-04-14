@@ -300,6 +300,12 @@ class musicControlsCtrl {
 		}
 	}
 
+	setSong(i) {
+		this.currentSong = this.library[i];
+		this.pause();
+		this.play();
+	}
+
 	play(){
 		var musicController = this;
 		if(this.currentSong.path) {

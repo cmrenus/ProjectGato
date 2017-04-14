@@ -53,6 +53,12 @@
 			</div>
 			<div role='tabpanel' id='playlists-tab-content' aria-labeledby='playlists-tab' ng-switch-when="3">
 				<h3>Songs</h3>
+				<md-list-item ng-repeat="song in musicControls.library" ng-click="musicControls.setSong($index)" class="noright">
+					<p>{{ song.title }}</p>
+					<p>{{ song.artist }}</p>
+					<p>{{ song.album }}</p>
+					<md-divider ng-if="!$last"></md-divider>
+				</md-list-item>
 			</div>
 		</ng-switch>
 	</md-content>
