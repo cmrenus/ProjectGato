@@ -15,7 +15,7 @@ exports.Song = function(data, path) {
         this.picture = base64;
     }
     else {
-        this.picture = './img/albumPlaceHolder.png';
+        this.picture = './resources/images/albumPlaceHolder.png';
     }
     // this.number = data.track.no;
     // this.albumImg = data.picture[0].data;

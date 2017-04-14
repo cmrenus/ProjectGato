@@ -53,10 +53,17 @@
 			</div>
 			<div role='tabpanel' id='playlists-tab-content' aria-labeledby='playlists-tab' ng-switch-when="3">
 				<h3>Songs</h3>
-				<md-list-item ng-repeat="song in musicControls.library" ng-click="musicControls.setSong($index)" class="noright">
-					<p>{{ song.title }}</p>
-					<p>{{ song.artist }}</p>
-					<p>{{ song.album }}</p>
+				<md-list-item layout="row" ng-repeat="song in musicControls.library" ng-click="musicControls.setSong($index)" class="noright">
+					<img ng-src="{{ song.picture }}" class="md-avatar"/>
+					<div flex="33" class="md-list-item-text">
+						<p>{{ song.title }}</p>
+					</div>
+					<div flex="33" class="md-list-item-text">
+						<p>{{ song.artist }}</p>
+					</div>
+					<div flex="33" class="md-list-item-text">
+						<p>{{ song.album }}</p>
+					</div>
 					<md-divider ng-if="!$last"></md-divider>
 				</md-list-item>
 			</div>
