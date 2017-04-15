@@ -5,7 +5,7 @@
 
 class mainHeaderCtrl{
 
-	constructor($mdSidenav, $log, $location, colorService, $scope){
+	constructor($mdSidenav, $log, $location, colorService, $scope, musicService, $mdToast){
 		'ngInject';
 
 		this._$mdSidenav = $mdSidenav;
@@ -15,11 +15,30 @@ class mainHeaderCtrl{
     
     this.activeBackgroundColor = colorService.getActiveBackgroundColor();
     var vm = this;
+
+    //check if first time starting application
+    this.newApp = musicService.libraryEmpty();
+
     $scope.$watch(function(){return colorService.getActiveBackgroundColor()}, function(newVal, oldVal, scope){
       if(newVal){
         vm.activeBackgroundColor = newVal;
       }
     }, true);
+
+
+
+    $scope.$on('uploadedMusic', function(e, value){
+      console.log(e, value);
+      vm.newApp = false;
+      $scope.$apply();
+
+      $mdToast.show(
+        $mdToast.simple()
+          .textContent('Music Uploaded!')
+          .position('top right')
+          .hideDelay(3000)
+      );
+    });
 	};
     /**
      * Build handler to open/close a SideNav; when animation finishes
@@ -45,7 +64,7 @@ class mainHeaderCtrl{
       };
     }
 }
-mainHeaderCtrl.$inject = ['$mdSidenav', '$log', '$location', 'colorService', '$scope'];
+mainHeaderCtrl.$inject = ['$mdSidenav', '$log', '$location', 'colorService', '$scope', 'musicService', '$mdToast'];
 
 export default mainHeaderCtrl;
 //})();

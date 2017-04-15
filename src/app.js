@@ -16,6 +16,7 @@ import mainHeaderCtrl from './client/header/mainHeaderCtrl';
 import settingsCtrl from './client/settings/settingsCtrl';
 import colorService from './client/settings/colorService';
 import userService from './client/user/userService';
+import musicService from './client/music/musicService';
 import rootCtrl from './client/root/rootCtrl';
 import musicControlsCtrl from './client/music/musicControlsCtrl';
 
@@ -26,6 +27,7 @@ import musicControlsCtrl from './client/music/musicControlsCtrl';
 	.config(config)
 	.service('colorService', colorService)
 	.service('userService', userService)
+	.service('musicService', musicService)
 	.controller('mainHeaderCtrl', mainHeaderCtrl)
 	.controller('settingsCtrl', settingsCtrl)
 	.controller('rootCtrl', rootCtrl)

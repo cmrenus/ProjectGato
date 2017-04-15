@@ -6,7 +6,7 @@ var Song = require('../src/classes/song.js').Song;
 
 
 export default class musicControlsCtrl {
-	constructor(colorService, $scope){
+	constructor(colorService, $scope, musicService){
 		this.slash = (function() {
 					if(process.platform === 'darwin' || process.platform === 'linux') {
 							return '/';
@@ -23,6 +23,7 @@ export default class musicControlsCtrl {
 		this.player = document.getElementById('music-player');
 		this.currentSong = null;
 		var vm = this;
+		this._musicService = musicService;
 
 		$scope.$watch(function(){return colorService.getThemeColor('primary', 'default')}, function(newVal, oldVal, scope){
 	      if(newVal){
@@ -36,7 +37,8 @@ export default class musicControlsCtrl {
 	      }
 	    }, true);
 
-		this.getLibrary();
+		this.library = musicService.getLibrary();
+		//this.openFileExplorer = musicService.openFileExplorer;
 	};
 
 	getLibrary() {
@@ -99,7 +101,7 @@ export default class musicControlsCtrl {
 		this.pause();
 		this.play();
 	}
-
+	/*
 	getMusicData(path) {
 			//Setting a variable for the controller
 			var musicController = this;
@@ -143,10 +145,11 @@ export default class musicControlsCtrl {
 					//Run our callback function
 					callback(promises);
 			}
-	}
+	}*/
 
 	openFileExplorer() {
-		var musicController = this;
+		this._musicService.openFileExplorer();
+		/*var musicController = this;
 		dialog.showOpenDialog({properties: ['openDirectory']}, function(files) {
 				//Getting the path to our files
 				console.log('hi');
@@ -162,8 +165,8 @@ export default class musicControlsCtrl {
 								jetpack.write('./data/library.json', musicController.library);
 						});
 				});
-		});
+		});*/
 	}
 };
 
-musicControlsCtrl.$inject = ['colorService', '$scope'];
+musicControlsCtrl.$inject = ['colorService', '$scope', 'musicService'];
