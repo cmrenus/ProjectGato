@@ -5,19 +5,22 @@
 
 class mainHeaderCtrl{
 
-	constructor($mdSidenav, $log, $location, colorService, $scope, musicService, $mdToast){
+	constructor($mdSidenav, $log, $location, colorService, $scope, musicService, $mdToast, $window){
 		'ngInject';
 
 		this._$mdSidenav = $mdSidenav;
 		this._$log = $log;
 		this.toggleRight = this.buildToggler('right');
+    this.activeBackgroundColor = colorService.getActiveBackgroundColor();
     this.active = $location.path().split('/')[0];
     
-    this.activeBackgroundColor = colorService.getActiveBackgroundColor();
     var vm = this;
 
     //check if first time starting application
     this.newApp = musicService.libraryEmpty();
+    if(this.newApp === false){
+      $window.location.href = '#/music/songs';
+    }
 
     $scope.$watch(function(){return colorService.getActiveBackgroundColor()}, function(newVal, oldVal, scope){
       if(newVal){
@@ -31,7 +34,7 @@ class mainHeaderCtrl{
       console.log(e, value);
       vm.newApp = false;
       $scope.$apply();
-
+      $window.location.href = '#/music/songs';
       $mdToast.show(
         $mdToast.simple()
           .textContent('Music Uploaded!')
@@ -64,7 +67,7 @@ class mainHeaderCtrl{
       };
     }
 }
-mainHeaderCtrl.$inject = ['$mdSidenav', '$log', '$location', 'colorService', '$scope', 'musicService', '$mdToast'];
+mainHeaderCtrl.$inject = ['$mdSidenav', '$log', '$location', 'colorService', '$scope', 'musicService', '$mdToast', '$window'];
 
 export default mainHeaderCtrl;
 //})();

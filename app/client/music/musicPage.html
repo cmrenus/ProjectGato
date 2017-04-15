@@ -1,6 +1,6 @@
-<md-content layout="column" flex>
+<md-content layout="column" flex ng-controller='musicCtrl as musicCtrl'>
 	<div layout='row'>
-		<md-tabs md-selected="currentTab" md-stretch-tabs md-dynamic-height md-border-bottom flex>
+		<md-tabs md-selected="musicCtrl.currentTab" md-stretch-tabs md-dynamic-height md-border-bottom flex>
 			<md-tab id='playlists-tab' aria-controls="playlists-tab-content" label="playlists">
 			</md-tab>
 			<md-tab id='artists-tab' aria-controls="artists-tab-content" label='artists'>
@@ -41,7 +41,7 @@
 	</div>
 
 	<md-content layout-padding flex>
-		<ng-switch on="currentTab" class="tabpanel-container">
+		<ng-switch on="musicCtrl.currentTab" class="tabpanel-container">
 			<div role='tabpanel' id='playlists-tab-content' aria-labeledby='playlists-tab' ng-switch-when="0">
 				<h3>Playlists</h3>
 			</div>

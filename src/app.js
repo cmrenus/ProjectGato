@@ -19,6 +19,7 @@ import userService from './client/user/userService';
 import musicService from './client/music/musicService';
 import rootCtrl from './client/root/rootCtrl';
 import musicControlsCtrl from './client/music/musicControlsCtrl';
+import musicCtrl from './client/music/musicCtrl';
 
 (function(){
 	"use strict";
@@ -31,7 +32,8 @@ import musicControlsCtrl from './client/music/musicControlsCtrl';
 	.controller('mainHeaderCtrl', mainHeaderCtrl)
 	.controller('settingsCtrl', settingsCtrl)
 	.controller('rootCtrl', rootCtrl)
-	.controller('musicControlsCtrl', musicControlsCtrl);
+	.controller('musicControlsCtrl', musicControlsCtrl)
+	.controller('musicCtrl', musicCtrl);
 	
 
 	config.$inject = ['$routeProvider', '$mdThemingProvider', '$mdColorPalette', '$provide'];
@@ -41,7 +43,7 @@ import musicControlsCtrl from './client/music/musicControlsCtrl';
 		.when('/', {
 			templateUrl: './client/landing/welcome.html'
 		})
-		.when('/music/playlists', {
+		.when('/music/:currentTab', {
 			templateUrl: './client/music/musicPage.html'
 		})
 		.when('/upload/spotify', {
