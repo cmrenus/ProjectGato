@@ -56,7 +56,7 @@ export default class musicControlsCtrl {
 	}
 
 	setSong(i) {
-		this.currentSong = this.library[i];
+		this.currentSong = this.library[this.library.indexOf(i)];
 		this.pause();
 		this.play();
 	}

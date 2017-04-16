@@ -3,6 +3,9 @@
 export default class musicCtrl {
 	constructor($routeParams){
 		'ngInject'
+		this.reverse = false;
+		this.predicate = ['artist', 'title'];
+
 		if($routeParams.currentTab === 'playlists'){
 			this.currentTab = 0;
 		}
@@ -15,6 +18,11 @@ export default class musicCtrl {
 		else {
 			this.currentTab = 3;
 		}
+	}
+
+	order(predicate) {
+		this.reverse = (this.predicate[0] === predicate) ? !this.reverse : false;
+	    this.predicate = [predicate, 'title'];
 	}
 }
 

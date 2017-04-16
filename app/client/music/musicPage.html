@@ -35,7 +35,7 @@
 		<!--<md-button class="btn-small" ng-click="searchbar.search(searchbar.searchQuery); searchbar.searchOpen = true;"><i class="material-icons">search</i></md-button>-->
 	  	<md-input-container ng-class="{'search-open': searchbar.searchOpen}" md-no-float class="hide-error-msg search-bar">
 			<!--<label>Search</label>-->
-			<input type="text" id="search-input" ng-model="searchbar.searchQuery" placeholder='Search'>
+			<input type="text" id="search-input" ng-model="musicCtrl.searchbar.searchQuery" placeholder='Search'>
 			<md-button class="close-button md-icon-button" ng-click="searchbar.searchOpen=false"><i class="material-icons">close</i></md-button>
 	  	</md-input-container>
 	</div>
@@ -53,7 +53,51 @@
 			</div>
 			<div role='tabpanel' id='playlists-tab-content' aria-labeledby='playlists-tab' ng-switch-when="3">
 				<h3>Songs</h3>
-				<md-list-item layout="row" ng-repeat="song in musicControls.library" ng-click="musicControls.setSong($index)" class="noright">
+				<div layout='row'>
+					<a href='' flex='33' ng-click='musicCtrl.order("title")'>
+						<h4 class='inline-icon'>
+							Title
+							<md-icon class='inline-icon' md-font-icon='keyboard_arrow_down' 
+								ng-show='musicCtrl.predicate[0] === "title" && musicCtrl.reverse === false'>
+								keyboard_arrow_down
+							</md-icon>
+
+							<md-icon class='inline-icon' md-font-icon='keyboard_arrow_up' 
+								ng-show='musicCtrl.predicate[0] === "title" && musicCtrl.reverse === true'>
+								keyboard_arrow_up
+							</md-icon>
+						</h4>
+					</a>
+					<a href='' flex='33' ng-click='musicCtrl.order("artist")'>
+						<h4 class='inline-icon'>
+							Artist
+							<md-icon class='inline-icon' md-font-icon='keyboard-arrow-down'
+								ng-show='musicCtrl.predicate[0] === "artist" && musicCtrl.reverse === false'>
+								keyboard_arrow_down
+							</md-icon>
+
+							<md-icon class='inline-icon' md-font-icon='keyboard_arrow_up' 
+								ng-show='musicCtrl.predicate[0] === "artist" && musicCtrl.reverse === true'>
+								keyboard_arrow_up
+							</md-icon>
+						</h4>
+					</a>
+					<a href='' flex='33' ng-click='musicCtrl.order("album")'>
+						<h4 class='inline-icon'>
+							Album
+							<md-icon class='inline-icon' md-font-icon='keyboard-arrow-down'
+								ng-show='musicCtrl.predicate[0] === "album" && musicCtrl.reverse === false'>
+								keyboard_arrow_down
+							</md-icon>
+
+							<md-icon class='inline-icon' md-font-icon='keyboard_arrow_up' 
+								ng-show='musicCtrl.predicate[0] === "album" && musicCtrl.reverse === true'>
+								keyboard_arrow_up
+							</md-icon>
+						</h4>
+					</a>
+				</div>
+				<md-list-item layout="row" ng-repeat="song in musicControls.library | filter: musicCtrl.searchbar.searchQuery | orderBy: musicCtrl.predicate: musicCtrl.reverse" ng-click="musicControls.setSong(song)" class="noright">
 					<img ng-src="{{ song.picture }}" class="md-avatar"/>
 					<div flex="33" class="md-list-item-text">
 						<p>{{ song.title }}</p>
