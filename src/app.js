@@ -17,9 +17,11 @@ import settingsCtrl from './client/settings/settingsCtrl';
 import colorService from './client/settings/colorService';
 import userService from './client/user/userService';
 import musicService from './client/music/musicService';
+import spotifyService from './client/uploads/spotifyService';
 import rootCtrl from './client/root/rootCtrl';
 import musicControlsCtrl from './client/music/musicControlsCtrl';
 import musicCtrl from './client/music/musicCtrl';
+import spotifyUploadCtrl from './client/uploads/spotifyUploadCtrl';
 
 (function(){
 	"use strict";
@@ -29,10 +31,12 @@ import musicCtrl from './client/music/musicCtrl';
 	.service('colorService', colorService)
 	.service('userService', userService)
 	.service('musicService', musicService)
+	.service('spotifyService', spotifyService)
 	.controller('mainHeaderCtrl', mainHeaderCtrl)
 	.controller('settingsCtrl', settingsCtrl)
 	.controller('rootCtrl', rootCtrl)
 	.controller('musicControlsCtrl', musicControlsCtrl)
+	.controller('spotifyUploadCtrl', spotifyUploadCtrl)
 	.controller('musicCtrl', musicCtrl);
 	
 

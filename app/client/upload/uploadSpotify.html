@@ -1,8 +1,25 @@
-<md-content flex='100' layout-padding>
+<md-content flex='100' layout-padding ng-controller='spotifyUploadCtrl as spotify'>
 	<md-button href='#/upload'>
 		<i class='material-icons inline-icon'>arrow_back</i>
 		Back
 	</md-button>
 	<h1>Spotify</h1>
+
+	<md-button ng-click='spotify.loginToSpotify()'>Login</md-button>
+	
+	<md-content>
+		<md-list flex ng-show='spotify.playlists'>
+			<md-subheader class='md-no-sticky'>Spotify Playlists</md-subheader>
+			<md-list-item class='md-3-line' ng-repeat='item in spotify.playlists' ng-click='null'>
+				<img ng-src='{{item.images[0].url}}' class='md-avatar'/>
+				<div class='md-list-item-text' layout='column'>
+					<h3>{{item.name}}</h3>
+					<p>{{item.owner.id}}</p>
+				</div>
+			</md-list-item>
+		</md-list>
+	</md-content>
+
+
 
 </md-content>
