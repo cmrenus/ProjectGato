@@ -623,6 +623,19 @@ class spotifyService {
 		});
 	}
 
+	getPlaylistDetails(user_id, playlist_id){
+		var vm = this;
+		return vm.getToken().then(function(token){
+			return vm._$http({
+				method: 'GET',
+				url: 'https://api.spotify.com/v1/users/' + user_id + '/playlists/'+ playlist_id + '/tracks',
+				headers: {
+					Authorization: 'Bearer ' + token
+				}
+			});
+		});
+	}
+
 }
 
 spotifyService.$inject = ['$http', '$q', '$window'];
@@ -787,6 +800,7 @@ class spotifyUploadCtrl {
 		this._spotifyService = spotifyService;
 		this.playlists = [];
 		var vm = this;
+		this._$scope = $scope;
 		if(spotifyService.authenticated()){
 			spotifyService.getUserPlaylists().then(function(data){
 				//console.log(data);
@@ -825,6 +839,21 @@ class spotifyUploadCtrl {
 		});
 	}
 
+	getPlaylistDetails(playlist){
+		var vm = this;
+		this._spotifyService.getPlaylistDetails(playlist.owner.id, playlist.id).then(function(data){
+			console.log(data);
+			vm._$scope.$apply(function(){
+				playlist.tracks = data.data.items;
+				vm.currentPlaylist = playlist;
+				console.log(vm.currentPlaylist);
+			});
+		},
+		function(err){
+			console.log(err);
+		});
+	}
+
 }
 
 spotifyUploadCtrl.$inject = ['spotifyService', '$scope'];
@@ -848,7 +877,38 @@ spotifyUploadCtrl.$inject = ['spotifyService', '$scope'];
 	.controller('rootCtrl', rootCtrl)
 	.controller('musicControlsCtrl', musicControlsCtrl)
 	.controller('spotifyUploadCtrl', spotifyUploadCtrl)
-	.controller('musicCtrl', musicCtrl);
+	.controller('musicCtrl', musicCtrl)
+	.filter('formatDuration', function () {
+	    return function (input) {
+	        var totalHours, totalMinutes, totalSeconds, hours, minutes, seconds, result='';
+
+	        totalSeconds = input / 1000;
+	        totalMinutes = totalSeconds / 60;
+	        totalHours = totalMinutes / 60;
+
+	        seconds = Math.floor(totalSeconds) % 60;
+	        minutes = Math.floor(totalMinutes) % 60;
+	        hours = Math.floor(totalHours) % 60;
+
+	        if (hours !== 0) {
+	            result += hours+':';
+
+	            if (minutes.toString().length == 1) {
+	                minutes = '0'+minutes;
+	            }
+	        }
+
+	        result += minutes+':';
+
+	        if (seconds.toString().length == 1) {
+	            seconds = '0'+seconds;
+	        }
+
+	        result += seconds;
+
+	        return result;
+	    };
+	});
 	
 
 	config.$inject = ['$routeProvider', '$mdThemingProvider', '$mdColorPalette', '$provide'];

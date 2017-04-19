@@ -235,6 +235,19 @@ export default class spotifyService {
 		});
 	}
 
+	getPlaylistDetails(user_id, playlist_id){
+		var vm = this;
+		return vm.getToken().then(function(token){
+			return vm._$http({
+				method: 'GET',
+				url: 'https://api.spotify.com/v1/users/' + user_id + '/playlists/'+ playlist_id + '/tracks',
+				headers: {
+					Authorization: 'Bearer ' + token
+				}
+			});
+		});
+	}
+
 }
 
 spotifyService.$inject = ['$http', '$q', '$window'];

@@ -7,17 +7,45 @@
 
 	<md-button ng-click='spotify.loginToSpotify()'>Login</md-button>
 	
-	<md-content>
-		<md-list flex ng-show='spotify.playlists'>
-			<md-subheader class='md-no-sticky'>Spotify Playlists</md-subheader>
-			<md-list-item class='md-3-line' ng-repeat='item in spotify.playlists' ng-click='null'>
-				<img ng-src='{{item.images[0].url}}' class='md-avatar'/>
-				<div class='md-list-item-text' layout='column'>
-					<h3>{{item.name}}</h3>
-					<p>{{item.owner.id}}</p>
-				</div>
-			</md-list-item>
-		</md-list>
+	<md-content layout='row' layout-padding>
+		<div flex='25'>
+			<md-list flex ng-show='spotify.playlists' class='md-dense'>
+				<md-subheader class='md-no-sticky'>Spotify Playlists</md-subheader>
+				<md-list-item class='md-3-line' ng-repeat='item in spotify.playlists' ng-click='spotify.getPlaylistDetails(item)'>
+					<img ng-src='{{item.images[0].url}}' class='md-avatar'/>
+					<div class='md-list-item-text' layout='column'>
+						<h3>{{item.name}}</h3>
+						<p>{{item.owner.id}}</p>
+					</div>
+					<md-divider ng-if="!$last"></md-divider>
+				</md-list-item>
+
+			</md-list>
+		</div>
+		<div layout='column' layout-padding flex>
+			<h2>
+				{{spotify.currentPlaylist.name}}
+				<small>{{spotify.currentPlaylist.owner.id}}</small>
+			</h2>
+			<md-list>
+				<md-list-item ng-repeat="song in spotify.currentPlaylist.tracks" class="noright">
+					<!--<img ng-src="{{ song.picture }}" class="md-avatar"/>-->
+					<div flex="30" class="md-list-item-text">
+						<p>{{ song.track.name }}</p>
+					</div>
+					<div flex="30" class="md-list-item-text">
+						<p><span ng-repeat='artist in song.track.artists'>{{ artist.name }}<span ng-if='!$last'>, </span></span></p>
+					</div>
+					<div flex="30" class="md-list-item-text">
+						<p>{{ song.track.album.name }}</p>
+					</div>
+					<div flex='10' class='mg-list-item-text'>
+						<p>{{ song.track.duration_ms | formatDuration }}</p>
+					</div>
+					<md-divider ng-if="!$last"></md-divider>
+				</md-list-item>
+			</md-list>
+		</div>
 	</md-content>
 
 

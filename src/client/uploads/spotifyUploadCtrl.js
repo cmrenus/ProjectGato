@@ -6,6 +6,7 @@ export default class spotifyUploadCtrl {
 		this._spotifyService = spotifyService;
 		this.playlists = [];
 		var vm = this;
+		this._$scope = $scope;
 		if(spotifyService.authenticated()){
 			spotifyService.getUserPlaylists().then(function(data){
 				//console.log(data);
@@ -37,6 +38,21 @@ export default class spotifyUploadCtrl {
 			},
 			function(err){
 				console.log(err);
+			});
+		},
+		function(err){
+			console.log(err);
+		});
+	}
+
+	getPlaylistDetails(playlist){
+		var vm = this;
+		this._spotifyService.getPlaylistDetails(playlist.owner.id, playlist.id).then(function(data){
+			console.log(data);
+			vm._$scope.$apply(function(){
+				playlist.tracks = data.data.items;
+				vm.currentPlaylist = playlist;
+				console.log(vm.currentPlaylist);
 			});
 		},
 		function(err){
