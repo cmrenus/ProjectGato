@@ -60,6 +60,10 @@ export default class spotifyUploadCtrl {
 		});
 	}
 
+	addPlaylist(playlist){
+		
+	}
+
 };
 
 spotifyUploadCtrl.$inject = ['spotifyService', '$scope'];

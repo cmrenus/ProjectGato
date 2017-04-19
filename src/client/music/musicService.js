@@ -20,6 +20,7 @@ export default class musicService {
 		this._$rootScope = $rootScope;
 
 		this.getSongs();
+		this.getPlaylists();
 	}
 
 	getSongs() {
@@ -130,6 +131,50 @@ export default class musicService {
 						});
 				});
 		});
+	}
+
+	getPlaylists() {
+		if(jetpack.read(userDataPath + slash + 'playlists.json')) {
+			this.playlists = JSON.parse(jetpack.read(userDataPath + slash + 'playlists.json'));
+			return playlists;
+		}
+		else {
+			console.log('No existing playlists');
+			this.playlists = {};
+			return {};
+		}
+	}
+
+	createPlaylist(playlist_name) {
+		//this.playlist = {};
+		this.playlists[playlist.name] = [];
+		jetpack.write(userDataPath + slash + 'playlists.json', this.playlists);
+	}
+
+
+
+	createPlaylistFromSpotifyPlaylist(playlist){
+		var vm = this;
+		if(vm.playlists[playlist.name]){
+			return new Error('playlist already exists');
+		}
+		vm.playlists[playlist.name] = [];
+		for(var x = 0; x < playlist.tracks.length; x++){
+			vm.playlists[playlist.name].push({
+				title: playlist.tracks.name,
+				artist: playlist.tracks.artists[0].name,
+				album: playlists.tracks.album.name,
+				picture: playlists.tracks.album.images[0].url,
+				source: 'spotify',
+				song_id: playlist.track.id,
+				preview: playlist.track.preview_url
+			});
+			if(x - 1 === playlist.tracks.length){
+				jetpack.write(userDataPath + slash + 'playlists.json', vm.playlists);
+				return true;
+			}
+		}
+
 	}
 }
 

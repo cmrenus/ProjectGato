@@ -23,10 +23,15 @@
 			</md-list>
 		</div>
 		<div layout='column' layout-padding flex>
-			<h2>
-				{{spotify.currentPlaylist.name}}
-				<small>{{spotify.currentPlaylist.owner.id}}</small>
-			</h2>
+			<div layout='row'>
+				<h2 class='md-headline'>
+					{{spotify.currentPlaylist.name}}
+					<small class='md-caption'>{{spotify.currentPlaylist.owner.id}}</small>
+				</h2>
+				<div layout='column' layout-align='center center'>
+					<md-button class='md-raised' ng-click='spotify.addPlaylist(spotify.currentPlaylist)'>Add Playlist</md-button>
+				</div>
+			</div>
 			<md-list>
 				<md-list-item ng-repeat="song in spotify.currentPlaylist.tracks" class="noright">
 					<!--<img ng-src="{{ song.picture }}" class="md-avatar"/>-->
