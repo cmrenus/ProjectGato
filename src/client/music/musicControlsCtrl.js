@@ -47,10 +47,8 @@ export default class musicControlsCtrl {
 	};
 
 	getLibrary() {
-		/*return jetpack.readAsync('./data/user.json').then(data => {
-			return JSON.parse(data);
-		});*/
 		if(jetpack.read(userDataPath + slash + 'library.json')) {
+			console.log('hi');
 			this.library = JSON.parse(jetpack.read(userDataPath + slash + 'library.json'));
 			this.createSongsList();
 			this.currentSong = this.songs[0];

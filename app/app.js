@@ -388,7 +388,7 @@ var jetpack$2 = require('fs-jetpack');
 var { dialog: dialog$1, app: app$1 } = require('electron').remote;
 var Song$1 = require('../src/classes/song.js').Song;
 
-var userDataPath = app.getPath('userData');
+var userDataPath = app$1.getPath('userData');
 var slash = (function() {
 	if(process.platform === 'darwin' || process.platform === 'linux') {
 			return '/';
@@ -398,17 +398,7 @@ var slash = (function() {
 
 
 class musicControlsCtrl {
-<<<<<<< HEAD
-	constructor(colorService, $scope){
-=======
 	constructor(colorService, $scope, musicService){
-		this.slash = (function() {
-					if(process.platform === 'darwin' || process.platform === 'linux') {
-							return '/';
-					}
-					else return '\\'
-		})();
->>>>>>> dev
 		'ngInject';
 		this.primaryColor = colorService.getThemeColor('primary', 'default');
 		this.accentColor = colorService.getThemeColor('accent', 'default');
@@ -441,19 +431,11 @@ class musicControlsCtrl {
 	};
 
 	getLibrary() {
-		/*return jetpack.readAsync('./data/user.json').then(data => {
-			return JSON.parse(data);
-		});*/
-<<<<<<< HEAD
-		if(jetpack$1.read(userDataPath + slash + 'library.json')) {
-			this.library = JSON.parse(jetpack$1.read(userDataPath + slash + 'library.json'));
+		if(jetpack$2.read(userDataPath + slash + 'library.json')) {
+			console.log('hi');
+			this.library = JSON.parse(jetpack$2.read(userDataPath + slash + 'library.json'));
 			this.createSongsList();
 			this.currentSong = this.songs[0];
-=======
-		this.library = JSON.parse(jetpack$2.read('./data/library.json'));
-		if(this.library) {
-			this.currentSong = this.library[0];
->>>>>>> dev
 		}
 		else {
 			console.log('No existing library');
@@ -522,14 +504,14 @@ class musicControlsCtrl {
 		this.pause();
 		this.play();
 	}
-	/*
+	
 	getMusicData(path) {
 			//Setting a variable for the controller
 			var musicController = this;
 			//Hands back a promise to be resolved
 			return new Promise(function(resolve, reject) {
 					//using jsmediatags to read our music file data
-					jsmediatags.read(path, {
+					jsmediatags$1.read(path, {
 							onSuccess: function(data) {
 									if (!musicController.library[data.tags.artist]) {
 										musicController.library[data.tags.artist] = {};
@@ -537,26 +519,26 @@ class musicControlsCtrl {
 									if (!musicController.library[data.tags.artist][data.tags.album]) {
 										musicController.library[data.tags.artist][data.tags.album] = [];
 									}
-									musicController.library[data.tags.artist][data.tags.album].push(new Song(data.tags, path));
+									musicController.library[data.tags.artist][data.tags.album].push(new Song$1(data.tags, path));
 									//Resolve the promise
 									resolve();
 							},
 							onError: function(error) {
 									reject();
 							}
-					})
+					});
 			});
 	}
 	//Function to search our directory, takes a path, an empty array for promises, and a callback function
 	searchDir(path, promises, callback) {
 			//Getting an array of our files
-			var fileList = jetpack.list(path);
+			var fileList = jetpack$2.list(path);
 			for(var i = 0; i < fileList.length; i++) {
 					//Getting the path of the file in list
 					var file = path + slash + fileList[i];
 
 					//If the file we are given is actually a folder
-					if(fs.lstatSync(file).isDirectory()) {
+					if(fs$1.lstatSync(file).isDirectory()) {
 							//Recurse and run search directory again
 							this.searchDir(file, promises);
 					}
@@ -572,37 +554,30 @@ class musicControlsCtrl {
 					//Run our callback function
 					callback(promises);
 			}
-	}*/
+	}
 
 	openFileExplorer() {
-<<<<<<< HEAD
 		var musicController = this;
 		this.library = {};
-=======
 		this._musicService.openFileExplorer();
-		/*var musicController = this;
->>>>>>> dev
-		dialog.showOpenDialog({properties: ['openDirectory']}, function(files) {
+		var musicController = this;
+		dialog$1.showOpenDialog({properties: ['openDirectory']}, function(files) {
 				//Getting the path to our files
 				var musicFolder = files[0];
 				//Creating an empty array for promises
-				var promises = []
+				var promises = [];
 				//Run our search directory function, give it a callback
 				musicController.searchDir(musicFolder, promises, function() {
 						//This checks all of the promises that were added to our promise array
 						Promise.all(promises).then(function() {
 								console.log(musicController.library);
 								musicController.currentSong = musicController.library[0];
-<<<<<<< HEAD
 								console.log('writing');
-								jetpack$1.remove(userDataPath + slash + 'library.json');
-								jetpack$1.write(userDataPath + slash + 'library.json', musicController.library);
-=======
-								jetpack.write('./data/library.json', musicController.library);
->>>>>>> dev
+								jetpack$2.remove(userDataPath + slash + 'library.json');
+								jetpack$2.write(userDataPath + slash + 'library.json', musicController.library);
 						});
 				});
-		});*/
+		});
 	}
 }
 
