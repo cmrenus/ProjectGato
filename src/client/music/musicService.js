@@ -4,55 +4,75 @@ var jetpack = require('fs-jetpack');
 var { dialog, app } = require('electron').remote;
 var Song = require('../src/classes/song.js').Song;
 
+var userDataPath = app.getPath('userData');
+console.log(userDataPath);
+var slash = (function() {
+	if(process.platform === 'darwin' || process.platform === 'linux') {
+			return '/';
+	}
+	else return '\\'
+})();
+
 
 export default class musicService {
 	constructor($rootScope){
 		'ngInject';
-		this.slash = (function() {
-					if(process.platform === 'darwin' || process.platform === 'linux') {
-							return '/';
-					}
-					else return '\\'
-		})();
 		this._$rootScope = $rootScope;
 
-		this.getLibrary();
+		this.getSongs();
 	}
 
-	getLibrary() {
-		/*return jetpack.readAsync('./data/user.json').then(data => {
-			return JSON.parse(data);
-		});*/
-		if(this.library){
-			return this.library;
+	getSongs() {
+		console.log(userDataPath + slash + 'library' + slash + 'library.json');
+		console.log(jetpack.read(userDataPath + slash + 'library' + slash + 'library.json'));
+		if(jetpack.read(userDataPath + slash + 'library.json')) {
+			console.log('hi');
+			this.library = JSON.parse(jetpack.read(userDataPath + slash + 'library.json'));
+			var songs = this.createSongsList();
+			return songs;
 		}
-		else{
-			this.library = JSON.parse(jetpack.read('./data/library.json'));
-			if(this.library) {
-				this.currentSong = this.library[0];
-				return this.library
-			}
-			else {
-				console.log('No existing library');
-				this.library = [];
-				return [];
+		else {
+			console.log('No existing library');
+			this.library = {};
+		}
+	}
+
+	createSongsList() {
+		var songs = []
+		for (var key1 in this.library) {
+			if (this.library.hasOwnProperty(key1)) {
+				for (var key2 in this.library[key1]) {
+					if (this.library[key1].hasOwnProperty(key2)) {
+						for (var i = 0; i < this.library[key1][key2].length; i++) {
+							songs.push(this.library[key1][key2][i]);
+						}
+					}
+				}
 			}
 		}
+		return songs;
 	}
 
 	libraryEmpty(){
-		return this.library.length === 0;
+		console.log(this.library);
+		return Object.keys(this.library).length === 0 && this.library.constructor === Object;
 	}
 
 	getMusicData(path) {
 			//Setting a variable for the controller
-			var vm = this;
+			var musicController = this;
 			//Hands back a promise to be resolved
 			return new Promise(function(resolve, reject) {
 					//using jsmediatags to read our music file data
 					jsmediatags.read(path, {
 							onSuccess: function(data) {
-									vm.library.push(new Song(data.tags, path));
+									if (!musicController.library[data.tags.artist]) {
+										musicController.library[data.tags.artist] = {};
+									}
+									if (!musicController.library[data.tags.artist][data.tags.album]) {
+										musicController.library[data.tags.artist][data.tags.album] = [];
+									}
+									musicController.library[data.tags.artist][data.tags.album].push(new Song(data.tags, path));
 									//Resolve the promise
 									resolve();
 							},
@@ -68,7 +88,7 @@ export default class musicService {
 			var fileList = jetpack.list(path);
 			for(var i = 0; i < fileList.length; i++) {
 					//Getting the path of the file in list
-					var file = path + this.slash + fileList[i];
+					var file = path + slash + fileList[i];
 
 					//If the file we are given is actually a folder
 					if(fs.lstatSync(file).isDirectory()) {
@@ -90,21 +110,23 @@ export default class musicService {
 	}
 
 	openFileExplorer() {
-		var vm = this;
+		var musicController = this;
+		this.library = {};
 		dialog.showOpenDialog({properties: ['openDirectory']}, function(files) {
 				//Getting the path to our files
-				console.log('hi');
 				var musicFolder = files[0];
 				//Creating an empty array for promises
 				var promises = []
 				//Run our search directory function, give it a callback
-				vm.searchDir(musicFolder, promises, function() {
+				musicController.searchDir(musicFolder, promises, function() {
 						//This checks all of the promises that were added to our promise array
 						Promise.all(promises).then(function() {
-								console.log(vm.library);
-								vm.currentSong = vm.library[0];
-								jetpack.write('./data/library.json', vm.library);
-								vm._$rootScope.$broadcast('uploadedMusic');
+								console.log(musicController.library);
+								musicController.currentSong = musicController.library[0];
+								console.log('writing');
+								jetpack.remove(userDataPath + slash + 'library.json');
+								jetpack.write(userDataPath + slash + 'library.json', musicController.library);
+								musicController._$rootScope.$broadcast('uploadedMusic');
 						});
 				});
 		});
