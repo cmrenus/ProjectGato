@@ -14,7 +14,7 @@ var slash = (function() {
 
 
 export default class musicControlsCtrl {
-	constructor(colorService, $scope){
+	constructor(colorService, $scope, musicService){
 		'ngInject';
 		this.primaryColor = colorService.getThemeColor('primary', 'default');
 		this.accentColor = colorService.getThemeColor('accent', 'default');
@@ -28,6 +28,7 @@ export default class musicControlsCtrl {
 		this.player = document.getElementById('music-player');
 		this.currentSong = null;
 		var vm = this;
+		this._musicService = musicService;
 
 		$scope.$watch(function(){return colorService.getThemeColor('primary', 'default')}, function(newVal, oldVal, scope){
 	      if(newVal){
@@ -41,7 +42,8 @@ export default class musicControlsCtrl {
 	      }
 	    }, true);
 
-		this.getLibrary();
+		this.library = musicService.getLibrary();
+		//this.openFileExplorer = musicService.openFileExplorer;
 	};
 
 	getLibrary() {
@@ -75,7 +77,7 @@ export default class musicControlsCtrl {
 	}
 
 	setSong(i) {
-		this.currentSong = this.library[i];
+		this.currentSong = this.library[this.library.indexOf(i)];
 		this.pause();
 		this.play();
 	}
@@ -120,7 +122,7 @@ export default class musicControlsCtrl {
 		this.pause();
 		this.play();
 	}
-
+	
 	getMusicData(path) {
 			//Setting a variable for the controller
 			var musicController = this;
@@ -175,6 +177,8 @@ export default class musicControlsCtrl {
 	openFileExplorer() {
 		var musicController = this;
 		this.library = {};
+		this._musicService.openFileExplorer();
+		var musicController = this;
 		dialog.showOpenDialog({properties: ['openDirectory']}, function(files) {
 				//Getting the path to our files
 				var musicFolder = files[0];
@@ -195,4 +199,4 @@ export default class musicControlsCtrl {
 	}
 };
 
-musicControlsCtrl.$inject = ['colorService', '$scope'];
+musicControlsCtrl.$inject = ['colorService', '$scope', 'musicService'];

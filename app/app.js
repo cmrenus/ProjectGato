@@ -22,21 +22,43 @@ var env = jetpack.cwd(__dirname).read('env.json', 'json');
 
 class mainHeaderCtrl{
 
-	constructor($mdSidenav, $log, $location, colorService, $scope){
+	constructor($mdSidenav, $log, $location, colorService, $scope, musicService, $mdToast, $window){
 		'ngInject';
 
 		this._$mdSidenav = $mdSidenav;
 		this._$log = $log;
 		this.toggleRight = this.buildToggler('right');
+    this.activeBackgroundColor = colorService.getActiveBackgroundColor();
     this.active = $location.path().split('/')[0];
     
-    this.activeBackgroundColor = colorService.getActiveBackgroundColor();
     var vm = this;
+
+    //check if first time starting application
+    this.newApp = musicService.libraryEmpty();
+    if(this.newApp === false){
+      $window.location.href = '#/music/songs';
+    }
+
     $scope.$watch(function(){return colorService.getActiveBackgroundColor()}, function(newVal, oldVal, scope){
       if(newVal){
         vm.activeBackgroundColor = newVal;
       }
     }, true);
+
+
+
+    $scope.$on('uploadedMusic', function(e, value){
+      console.log(e, value);
+      vm.newApp = false;
+      $scope.$apply();
+      $window.location.href = '#/music/songs';
+      $mdToast.show(
+        $mdToast.simple()
+          .textContent('Music Uploaded!')
+          .position('top right')
+          .hideDelay(3000)
+      );
+    });
 	};
     /**
      * Build handler to open/close a SideNav; when animation finishes
@@ -62,7 +84,7 @@ class mainHeaderCtrl{
       };
     }
 }
-mainHeaderCtrl.$inject = ['$mdSidenav', '$log', '$location', 'colorService', '$scope'];
+mainHeaderCtrl.$inject = ['$mdSidenav', '$log', '$location', 'colorService', '$scope', 'musicService', '$mdToast', '$window'];
 
 
 //})();
@@ -227,6 +249,121 @@ class userService {
 
 userService.$inject = ['$http'];
 
+var jsmediatags = require('jsmediatags');
+var fs = require('fs');
+var jetpack$1 = require('fs-jetpack');
+var { dialog, app } = require('electron').remote;
+var Song = require('../src/classes/song.js').Song;
+
+
+class musicService {
+	constructor($rootScope){
+		'ngInject';
+		this.slash = (function() {
+					if(process.platform === 'darwin' || process.platform === 'linux') {
+							return '/';
+					}
+					else return '\\'
+		})();
+		this._$rootScope = $rootScope;
+
+		this.getLibrary();
+	}
+
+	getLibrary() {
+		/*return jetpack.readAsync('./data/user.json').then(data => {
+			return JSON.parse(data);
+		});*/
+		if(this.library){
+			return this.library;
+		}
+		else{
+			this.library = JSON.parse(jetpack$1.read('./data/library.json'));
+			if(this.library) {
+				this.currentSong = this.library[0];
+				return this.library
+			}
+			else {
+				console.log('No existing library');
+				this.library = [];
+				return [];
+			}
+		}
+	}
+
+	libraryEmpty(){
+		return this.library.length === 0;
+	}
+
+	getMusicData(path) {
+			//Setting a variable for the controller
+			var vm = this;
+			//Hands back a promise to be resolved
+			return new Promise(function(resolve, reject) {
+					//using jsmediatags to read our music file data
+					jsmediatags.read(path, {
+							onSuccess: function(data) {
+									vm.library.push(new Song(data.tags, path));
+									//Resolve the promise
+									resolve();
+							},
+							onError: function(error) {
+									reject();
+							}
+					});
+			});
+	}
+	//Function to search our directory, takes a path, an empty array for promises, and a callback function
+	searchDir(path, promises, callback) {
+			//Getting an array of our files
+			var fileList = jetpack$1.list(path);
+			for(var i = 0; i < fileList.length; i++) {
+					//Getting the path of the file in list
+					var file = path + this.slash + fileList[i];
+
+					//If the file we are given is actually a folder
+					if(fs.lstatSync(file).isDirectory()) {
+							//Recurse and run search directory again
+							this.searchDir(file, promises);
+					}
+					//If the file is an mp3
+					else if(file.substr(file.length - 4) === '.mp3') {
+							//Push returned data to our promise array
+							promises.push(this.getMusicData(file));
+					}
+			}
+
+			//If there is a callback
+			if(callback) {
+					//Run our callback function
+					callback(promises);
+			}
+	}
+
+	openFileExplorer() {
+		var vm = this;
+		dialog.showOpenDialog({properties: ['openDirectory']}, function(files) {
+				//Getting the path to our files
+				console.log('hi');
+				var musicFolder = files[0];
+				//Creating an empty array for promises
+				var promises = [];
+				//Run our search directory function, give it a callback
+				vm.searchDir(musicFolder, promises, function() {
+						//This checks all of the promises that were added to our promise array
+						Promise.all(promises).then(function() {
+								console.log(vm.library);
+								vm.currentSong = vm.library[0];
+								jetpack$1.write('./data/library.json', vm.library);
+								vm._$rootScope.$broadcast('uploadedMusic');
+						});
+				});
+		});
+	}
+}
+
+musicService.$inject = ['$rootScope'];
+
 class rootCtrl {
 	constructor(colorService, $scope){
 		'ngInject';
@@ -245,11 +382,11 @@ class rootCtrl {
 
 rootCtrl.$inject = ['colorService', '$scope'];
 
-var jsmediatags = require('jsmediatags');
-var fs = require('fs');
-var jetpack$1 = require('fs-jetpack');
-var { dialog, app } = require('electron').remote;
-var Song = require('../src/classes/song.js').Song;
+var jsmediatags$1 = require('jsmediatags');
+var fs$1 = require('fs');
+var jetpack$2 = require('fs-jetpack');
+var { dialog: dialog$1, app: app$1 } = require('electron').remote;
+var Song$1 = require('../src/classes/song.js').Song;
 
 var userDataPath = app.getPath('userData');
 var slash = (function() {
@@ -261,7 +398,17 @@ var slash = (function() {
 
 
 class musicControlsCtrl {
+<<<<<<< HEAD
 	constructor(colorService, $scope){
+=======
+	constructor(colorService, $scope, musicService){
+		this.slash = (function() {
+					if(process.platform === 'darwin' || process.platform === 'linux') {
+							return '/';
+					}
+					else return '\\'
+		})();
+>>>>>>> dev
 		'ngInject';
 		this.primaryColor = colorService.getThemeColor('primary', 'default');
 		this.accentColor = colorService.getThemeColor('accent', 'default');
@@ -275,6 +422,7 @@ class musicControlsCtrl {
 		this.player = document.getElementById('music-player');
 		this.currentSong = null;
 		var vm = this;
+		this._musicService = musicService;
 
 		$scope.$watch(function(){return colorService.getThemeColor('primary', 'default')}, function(newVal, oldVal, scope){
 	      if(newVal){
@@ -288,17 +436,24 @@ class musicControlsCtrl {
 	      }
 	    }, true);
 
-		this.getLibrary();
+		this.library = musicService.getLibrary();
+		//this.openFileExplorer = musicService.openFileExplorer;
 	};
 
 	getLibrary() {
 		/*return jetpack.readAsync('./data/user.json').then(data => {
 			return JSON.parse(data);
 		});*/
+<<<<<<< HEAD
 		if(jetpack$1.read(userDataPath + slash + 'library.json')) {
 			this.library = JSON.parse(jetpack$1.read(userDataPath + slash + 'library.json'));
 			this.createSongsList();
 			this.currentSong = this.songs[0];
+=======
+		this.library = JSON.parse(jetpack$2.read('./data/library.json'));
+		if(this.library) {
+			this.currentSong = this.library[0];
+>>>>>>> dev
 		}
 		else {
 			console.log('No existing library');
@@ -322,7 +477,7 @@ class musicControlsCtrl {
 	}
 
 	setSong(i) {
-		this.currentSong = this.library[i];
+		this.currentSong = this.library[this.library.indexOf(i)];
 		this.pause();
 		this.play();
 	}
@@ -367,7 +522,7 @@ class musicControlsCtrl {
 		this.pause();
 		this.play();
 	}
-
+	/*
 	getMusicData(path) {
 			//Setting a variable for the controller
 			var musicController = this;
@@ -389,13 +544,13 @@ class musicControlsCtrl {
 							onError: function(error) {
 									reject();
 							}
-					});
+					})
 			});
 	}
 	//Function to search our directory, takes a path, an empty array for promises, and a callback function
 	searchDir(path, promises, callback) {
 			//Getting an array of our files
-			var fileList = jetpack$1.list(path);
+			var fileList = jetpack.list(path);
 			for(var i = 0; i < fileList.length; i++) {
 					//Getting the path of the file in list
 					var file = path + slash + fileList[i];
@@ -417,32 +572,69 @@ class musicControlsCtrl {
 					//Run our callback function
 					callback(promises);
 			}
-	}
+	}*/
 
 	openFileExplorer() {
+<<<<<<< HEAD
 		var musicController = this;
 		this.library = {};
+=======
+		this._musicService.openFileExplorer();
+		/*var musicController = this;
+>>>>>>> dev
 		dialog.showOpenDialog({properties: ['openDirectory']}, function(files) {
 				//Getting the path to our files
 				var musicFolder = files[0];
 				//Creating an empty array for promises
-				var promises = [];
+				var promises = []
 				//Run our search directory function, give it a callback
 				musicController.searchDir(musicFolder, promises, function() {
 						//This checks all of the promises that were added to our promise array
 						Promise.all(promises).then(function() {
 								console.log(musicController.library);
 								musicController.currentSong = musicController.library[0];
+<<<<<<< HEAD
 								console.log('writing');
 								jetpack$1.remove(userDataPath + slash + 'library.json');
 								jetpack$1.write(userDataPath + slash + 'library.json', musicController.library);
+=======
+								jetpack.write('./data/library.json', musicController.library);
+>>>>>>> dev
 						});
 				});
-		});
+		});*/
 	}
 }
 
-musicControlsCtrl.$inject = ['colorService', '$scope'];
+musicControlsCtrl.$inject = ['colorService', '$scope', 'musicService'];
+
+class musicCtrl {
+	constructor($routeParams){
+		'ngInject';
+		this.reverse = false;
+		this.predicate = ['artist', 'title'];
+
+		if($routeParams.currentTab === 'playlists'){
+			this.currentTab = 0;
+		}
+		else if($routeParams.currentTab === 'artists'){
+			this.currentTab = 1;
+		}
+		else if($routeParams.currentTab === 'albums'){
+			this.currentTab = 2;
+		}
+		else {
+			this.currentTab = 3;
+		}
+	}
+
+	order(predicate) {
+		this.reverse = (this.predicate[0] === predicate) ? !this.reverse : false;
+	    this.predicate = [predicate, 'title'];
+	}
+}
+
+musicCtrl.$inject = ['$routeParams'];
 
 // Here is the starting point for your application code.
 // All stuff below is just to show you how it works. You can delete all of it.
@@ -456,10 +648,12 @@ musicControlsCtrl.$inject = ['colorService', '$scope'];
 	.config(config)
 	.service('colorService', colorService)
 	.service('userService', userService)
+	.service('musicService', musicService)
 	.controller('mainHeaderCtrl', mainHeaderCtrl)
 	.controller('settingsCtrl', settingsCtrl)
 	.controller('rootCtrl', rootCtrl)
-	.controller('musicControlsCtrl', musicControlsCtrl);
+	.controller('musicControlsCtrl', musicControlsCtrl)
+	.controller('musicCtrl', musicCtrl);
 	
 
 	config.$inject = ['$routeProvider', '$mdThemingProvider', '$mdColorPalette', '$provide'];
@@ -469,7 +663,7 @@ musicControlsCtrl.$inject = ['colorService', '$scope'];
 		.when('/', {
 			templateUrl: './client/landing/welcome.html'
 		})
-		.when('/music/playlists', {
+		.when('/music/:currentTab', {
 			templateUrl: './client/music/musicPage.html'
 		})
 		.when('/upload/spotify', {
