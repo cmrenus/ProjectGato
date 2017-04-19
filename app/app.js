@@ -251,21 +251,26 @@ var jetpack$1 = require('fs-jetpack');
 var { dialog, app } = require('electron').remote;
 var Song = require('../src/classes/song.js').Song;
 
+var userDataPath = app.getPath('userData');
+var slash = (function() {
+	if(process.platform === 'darwin' || process.platform === 'linux') {
+			return '/';
+	}
+	else return '\\'
+})();
+
 
 class musicControlsCtrl {
 	constructor(colorService, $scope){
-		this.slash = (function() {
-					if(process.platform === 'darwin' || process.platform === 'linux') {
-							return '/';
-					}
-					else return '\\'
-		})();
 		'ngInject';
 		this.primaryColor = colorService.getThemeColor('primary', 'default');
 		this.accentColor = colorService.getThemeColor('accent', 'default');
 		this.status = 'paused';
 		this.volume = 35;
-		this.library;
+		this.library = {};
+		this.songs = [];
+		this.artists = [];
+		this.albums = [];
 		this.index = 0;
 		this.player = document.getElementById('music-player');
 		this.currentSong = null;
@@ -290,14 +295,30 @@ class musicControlsCtrl {
 		/*return jetpack.readAsync('./data/user.json').then(data => {
 			return JSON.parse(data);
 		});*/
-		this.library = JSON.parse(jetpack$1.read('./data/library.json'));
-		if(this.library) {
-			this.currentSong = this.library[0];
+		if(jetpack$1.read(userDataPath + slash + 'library.json')) {
+			this.library = JSON.parse(jetpack$1.read(userDataPath + slash + 'library.json'));
+			this.createSongsList();
+			this.currentSong = this.songs[0];
 		}
 		else {
 			console.log('No existing library');
-			this.library = [];
+			this.library = {};
 		}
+	}
+
+	createSongsList() {
+		for (var key1 in this.library) {
+			if (this.library.hasOwnProperty(key1)) {
+				for (var key2 in this.library[key1]) {
+					if (this.library[key1].hasOwnProperty(key2)) {
+						for (var i = 0; i < this.library[key1][key2].length; i++) {
+							this.songs.push(this.library[key1][key2][i]);
+						}
+					}
+				}
+			}
+		}
+		console.log(this.songs);
 	}
 
 	setSong(i) {
@@ -355,7 +376,13 @@ class musicControlsCtrl {
 					//using jsmediatags to read our music file data
 					jsmediatags.read(path, {
 							onSuccess: function(data) {
-									musicController.library.push(new Song(data.tags, path));
+									if (!musicController.library[data.tags.artist]) {
+										musicController.library[data.tags.artist] = {};
+									}
+									if (!musicController.library[data.tags.artist][data.tags.album]) {
+										musicController.library[data.tags.artist][data.tags.album] = [];
+									}
+									musicController.library[data.tags.artist][data.tags.album].push(new Song(data.tags, path));
 									//Resolve the promise
 									resolve();
 							},
@@ -371,7 +398,7 @@ class musicControlsCtrl {
 			var fileList = jetpack$1.list(path);
 			for(var i = 0; i < fileList.length; i++) {
 					//Getting the path of the file in list
-					var file = path + this.slash + fileList[i];
+					var file = path + slash + fileList[i];
 
 					//If the file we are given is actually a folder
 					if(fs.lstatSync(file).isDirectory()) {
@@ -394,9 +421,9 @@ class musicControlsCtrl {
 
 	openFileExplorer() {
 		var musicController = this;
+		this.library = {};
 		dialog.showOpenDialog({properties: ['openDirectory']}, function(files) {
 				//Getting the path to our files
-				console.log('hi');
 				var musicFolder = files[0];
 				//Creating an empty array for promises
 				var promises = [];
@@ -406,7 +433,9 @@ class musicControlsCtrl {
 						Promise.all(promises).then(function() {
 								console.log(musicController.library);
 								musicController.currentSong = musicController.library[0];
-								jetpack$1.write('./data/library.json', musicController.library);
+								console.log('writing');
+								jetpack$1.remove(userDataPath + slash + 'library.json');
+								jetpack$1.write(userDataPath + slash + 'library.json', musicController.library);
 						});
 				});
 		});
