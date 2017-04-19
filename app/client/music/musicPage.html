@@ -53,19 +53,32 @@
 			</div>
 			<div role='tabpanel' id='playlists-tab-content' aria-labeledby='playlists-tab' ng-switch-when="3">
 				<h3>Songs</h3>
-				<md-list-item layout="row" ng-repeat="song in musicControls.library" ng-click="musicControls.setSong($index)" class="noright">
-					<img ng-src="{{ song.picture }}" class="md-avatar"/>
-					<div flex="33" class="md-list-item-text">
-						<p>{{ song.title }}</p>
-					</div>
-					<div flex="33" class="md-list-item-text">
-						<p>{{ song.artist }}</p>
-					</div>
-					<div flex="33" class="md-list-item-text">
-						<p>{{ song.album }}</p>
-					</div>
-					<md-divider ng-if="!$last"></md-divider>
-				</md-list-item>
+				<md-list>
+					<md-list-item layout="row" class="noright">
+						<div flex="33" class="md-list-item-text">
+							<b>Title</b>
+						</div>
+						<div flex="33" class="md-list-item-text">
+							<b>Artist</b>
+						</div>
+						<div flex="33" class="md-list-item-text">
+							<b>Album</b>
+						</div>
+						<md-divider></md-divider>
+					</md-list-item>
+					<md-list-item layout="row" ng-repeat="song in musicControls.library" ng-click="musicControls.setSong($index)" class="noright">
+						<div flex="33" class="md-list-item-text">
+							<p>{{ song.title }}</p>
+						</div>
+						<div flex="33" class="md-list-item-text">
+							<p>{{ song.artist }}</p>
+						</div>
+						<div flex="33" class="md-list-item-text">
+							<p>{{ song.album }}</p>
+						</div>
+						<md-divider></md-divider>
+					</md-list-item>
+				</md-list>
 			</div>
 		</ng-switch>
 	</md-content>

@@ -74,8 +74,9 @@ md-input-container.hide-error-msg .md-errors-spacer {
 }
 
 .main-nav-button {
-	margin: 0;
-	padding: 10px;
+	align-items: center;
+	display: flex;
+	justify-content: center;
 	height: 100%;
 }
 
