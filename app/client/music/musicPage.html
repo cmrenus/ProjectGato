@@ -111,7 +111,6 @@
 									ng-show='musicCtrl.predicate[0] === "album" && musicCtrl.reverse === false'>
 									keyboard_arrow_down
 								</md-icon>
-
 								<md-icon class='inline-icon' md-font-icon='keyboard_arrow_up' 
 									ng-show='musicCtrl.predicate[0] === "album" && musicCtrl.reverse === true'>
 									keyboard_arrow_up
@@ -121,7 +120,7 @@
 						<md-divider ng-if="$first"></md-divider>
 					</md-list-item>
 					<div class="songs-container">
-						<md-list-item layout="row" ng-repeat="song in musicControls.songs | filter: musicCtrl.searchbar.searchQuery | orderBy: musicCtrl.predicate: musicCtrl.reverse" ng-click="musicControls.setSong(song)" class="noright">
+						<md-list-item layout="row" ng-repeat="song in musicControls.songs | filter: musicCtrl.searchbar.searchQuery | orderBy: musicCtrl.predicate: musicCtrl.reverse track by $index" ng-click="musicControls.setSong(song)" class="noright">
 							<div flex="33" class="md-list-item-text">
 								<p>{{ song.title }}</p>
 							</div>

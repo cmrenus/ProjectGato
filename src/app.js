@@ -80,9 +80,6 @@ import playlistsCtrl from './client/music/playlistsCtrl';
 		.when('/', {
 			templateUrl: './client/landing/welcome.html'
 		})
-		.when('/music/:currentTab/:item', {
-			templateUrl: './client/music/musicPage.html'
-		})
 		.when('/music/:currentTab', {
 			templateUrl: './client/music/musicPage.html'
 		})

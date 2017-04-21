@@ -448,18 +448,55 @@ class musicService {
 			}
 			vm.playlists[playlist.name] = [];
 			for(var x = 0; x < playlist.tracks.length; x++){
-				vm.playlists[playlist.name].push({
+				var artist, album, picture;
+
+				if(playlist.tracks[x].track.artists && playlist.tracks[x].track.artists[0]){
+					artist = playlist.tracks[x].track.artists[0].name;
+				}
+				else{
+					artist = undefined;
+				}
+
+				if(playlist.tracks[x].track.album){
+					album = playlist.tracks[x].track.album.name;
+				}
+				else{
+					album = undefined;
+				}
+
+				if(playlist.tracks[x].track.album && playlist.tracks[x].track.album.images && playlist.tracks[x].track.album.images[0]){
+					picture = playlist.tracks[x].track.album.images[0].url;
+				}
+				else{
+					picture = undefined;
+				}
+
+				var song = {
 					title: playlist.tracks[x].track.name,
-					artist: playlist.tracks[x].track.artists[0].name,
-					album: playlist.tracks[x].track.album.name,
-					picture: playlist.tracks[x].track.album.images[0].url,
+					artist: artist,
+					album: album,
+					picture: picture,
 					source: 'spotify',
 					song_id: playlist.tracks[x].track.id,
-					preview: playlist.tracks[x].track.preview_url
-				});
+					preview: playlist.tracks[x].track.preview_url,
+					duration: playlist.tracks[x].track.duration
+				};
+
+
+				vm.playlists[playlist.name].push(new Song(song, song.picture, song.source));
+				if(!vm.library[playlist.tracks[x].track.artists[0].name]){
+					vm.library[playlist.tracks[x].track.artists[0].name] = {};
+				}
+				if(!vm.library[playlist.tracks[x].track.artists[0].name][playlist.tracks[x].track.album.name]){
+					vm.library[playlist.tracks[x].track.artists[0].name][playlist.tracks[x].track.album.name] = [];
+				}
+				vm.library[playlist.tracks[x].track.artists[0].name][playlist.tracks[x].track.album.name].push(new Song(song, song.picture, song.source));
 				if(x === playlist.tracks.length - 1){
 					jetpack$1.remove(userDataPath + slash + 'playlists.json');
 					jetpack$1.write(userDataPath + slash + 'playlists.json', vm.playlists);
+					jetpack$1.remove(userDataPath + slash + 'library.json');
+					jetpack$1.write(userDataPath + slash + 'library.json', vm.library);
+					vm._$rootScope.$broadcast('uploadedMusic');
 					resolve();
 				}
 			}
@@ -842,6 +879,14 @@ class musicControlsCtrl {
 		this.play();
 	}
 
+	back(){
+		this.state = {
+			albumSelected: false,
+			artistSelected: false,
+			playlistSelected: false
+		};
+	}
+
 	play(){
 		var musicController = this;
 		if(this.currentSong.path) {
@@ -1011,6 +1056,12 @@ class playlistsCtrl {
 			}
 		}, true);
 		console.log(this.playlists);
+		this._$scope.musicControls.state.playlistSelected = false;
+	}
+
+	selectPlaylist(i){
+		this._$scope.musicControls.state.playlistSelected = true;
+		this._$scope.musicControls.songs = this.playlists[i];
 	}
 }
 
@@ -1076,9 +1127,6 @@ playlistsCtrl.$inject = ['musicService', '$scope'];
 		$routeProvider
 		.when('/', {
 			templateUrl: './client/landing/welcome.html'
-		})
-		.when('/music/:currentTab/:item', {
-			templateUrl: './client/music/musicPage.html'
 		})
 		.when('/music/:currentTab', {
 			templateUrl: './client/music/musicPage.html'
