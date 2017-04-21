@@ -94,6 +94,14 @@ export default class musicControlsCtrl {
 		this.play();
 	}
 
+	back(){
+		this.state = {
+			albumSelected: false,
+			artistSelected: false,
+			playlistSelected: false
+		}
+	}
+
 	play(){
 		var musicController = this;
 		if(this.currentSong.path) {
