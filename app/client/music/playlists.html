@@ -9,7 +9,7 @@
 		<div class='row'>
 			<md-card class='card' ng-repeat='(key,val) in p.playlists'>
 				<a ng-click='p.selectPlaylist(key, value)'>
-				<img ng-src="{{val[0].picture || './resources/images/albumPlaceholder.png'}}" width='100%' class="md-card-image" alt="">
+				<img ng-src="{{ val[0].picture || './resources/images/albumPlaceholder.png' }}" width='100%' class="md-card-image" alt="">
 				<md-card-title>
 					<md-card-title-text style='text-overflow: ellipsis;overflow: hidden;'>
 						<md-truncate><span class="md-headline">{{ key }}</span></md-truncate>

@@ -8,11 +8,14 @@ export default class spotifyUploadCtrl {
 		this._musicService = musicService;
 		var vm = this;
 		this._$scope = $scope;
+		this.loggedIn = spotifyService.authenticated();
+		this.loading = true;
 		if(spotifyService.authenticated()){
 			spotifyService.getUserPlaylists().then(function(data){
 				//console.log(data);
 				$scope.$apply(function(){
 					vm.playlists = data.data.items;
+					vm.loading = false;
 				});
 			},
 			function(err){
@@ -69,6 +72,28 @@ export default class spotifyUploadCtrl {
 			console.log(err);
 		});
 	};
+
+	addToLibrary(URI){
+		var parsed = URI.split(':');
+		var vm = this;
+		if(parsed[0] !== 'spotify'){
+			alert('invalid uri');
+		}
+		else{
+			if(parsed[1] === 'track'){
+				vm._musicService.addSpotifySongToLibrary(parsed[2]);
+			}
+			else if(parsed[1] === 'album'){
+
+			}
+			else if(parsed[1] === 'playlist'){
+				
+			}
+			else{
+
+			}
+		}
+	}
 
 };
 

@@ -5,51 +5,61 @@
 	</md-button>
 	<h1>Spotify</h1>
 
-	<md-button ng-click='spotify.loginToSpotify()'>Login</md-button>
+	<md-button ng-hide='spotify.loggedIn' ng-click='spotify.loginToSpotify()'>Login</md-button>
 	
-	<md-content layout='row' layout-padding>
-		<div flex='25'>
-			<md-list flex ng-show='spotify.playlists' class='md-dense'>
-				<md-subheader class='md-no-sticky'>Spotify Playlists</md-subheader>
-				<md-list-item class='md-3-line' ng-repeat='item in spotify.playlists' ng-click='spotify.getPlaylistDetails(item)'>
-					<img ng-src='{{item.images[0].url}}' class='md-avatar'/>
-					<div class='md-list-item-text' layout='column'>
-						<h3>{{item.name}}</h3>
-						<p>{{item.owner.id}}</p>
-					</div>
-					<md-divider ng-if="!$last"></md-divider>
-				</md-list-item>
+	<md-content ng-show='spotify.loggedIn' layout='column' layout-padding>
+		<div>
+			<md-input-container>
+        		<label>Add by URI</label>
+        		<input ng-model="spotify.URI">
+      		</md-input-container>
+      		<md-button class='md-raised md-accent' ng-click='spotify.addToLibrary(spotify.URI)'>Add to Library</md-button>
+      	</div>
+      	<div ng-show='spotify.loading'><span>Loading...</span></div>
+		<div ng-hide='spotify.loading' layout="row">
+			<div flex='25'>
+				<md-list flex ng-show='spotify.playlists' class='md-dense'>
+					<md-subheader class='md-no-sticky'>Spotify Playlists</md-subheader>
+					<md-list-item class='md-3-line' ng-repeat='item in spotify.playlists' ng-click='spotify.getPlaylistDetails(item)'>
+						<img ng-src='{{item.images[0].url}}' class='md-avatar'/>
+						<div class='md-list-item-text' layout='column'>
+							<h3>{{item.name}}</h3>
+							<p>{{item.owner.id}}</p>
+						</div>
+						<md-divider ng-if="!$last"></md-divider>
+					</md-list-item>
 
-			</md-list>
-		</div>
-		<div layout='column' layout-padding flex>
-			<div layout='row'>
-				<h2 class='md-headline'>
-					{{spotify.currentPlaylist.name}}
-					<small class='md-caption'>{{spotify.currentPlaylist.owner.id}}</small>
-				</h2>
-				<div layout='column' layout-align='center center'>
-					<md-button class='md-raised' ng-click='spotify.addPlaylist(spotify.currentPlaylist)'>Add Playlist</md-button>
-				</div>
+				</md-list>
 			</div>
-			<md-list>
-				<md-list-item ng-repeat="song in spotify.currentPlaylist.tracks" class="noright">
-					<!--<img ng-src="{{ song.picture }}" class="md-avatar"/>-->
-					<div flex="30" class="md-list-item-text">
-						<p>{{ song.track.name }}</p>
+			<div layout='column' layout-padding flex>
+				<div layout='row'>
+					<h2 class='md-headline'>
+						{{spotify.currentPlaylist.name}}
+						<small class='md-caption'>{{spotify.currentPlaylist.owner.id}}</small>
+					</h2>
+					<div ng-show='spotify.currentPlaylist' layout='column' layout-align='center center'>
+						<md-button class='md-raised md-accent' ng-click='spotify.addPlaylist(spotify.currentPlaylist)'>Add Playlist</md-button>
 					</div>
-					<div flex="30" class="md-list-item-text">
-						<p><span ng-repeat='artist in song.track.artists'>{{ artist.name }}<span ng-if='!$last'>, </span></span></p>
-					</div>
-					<div flex="30" class="md-list-item-text">
-						<p>{{ song.track.album.name }}</p>
-					</div>
-					<div flex='10' class='mg-list-item-text'>
-						<p>{{ song.track.duration_ms | formatDuration }}</p>
-					</div>
-					<md-divider ng-if="!$last"></md-divider>
-				</md-list-item>
-			</md-list>
+				</div>
+				<md-list>
+					<md-list-item ng-repeat="song in spotify.currentPlaylist.tracks" class="noright">
+						<!--<img ng-src="{{ song.picture }}" class="md-avatar"/>-->
+						<div flex="30" class="md-list-item-text">
+							<p>{{ song.track.name }}</p>
+						</div>
+						<div flex="30" class="md-list-item-text">
+							<p><span ng-repeat='artist in song.track.artists'>{{ artist.name }}<span ng-if='!$last'>, </span></span></p>
+						</div>
+						<div flex="30" class="md-list-item-text">
+							<p>{{ song.track.album.name }}</p>
+						</div>
+						<div flex='10' class='mg-list-item-text'>
+							<p>{{ song.track.duration_ms | formatDuration }}</p>
+						</div>
+						<md-divider ng-if="!$last"></md-divider>
+					</md-list-item>
+				</md-list>
+			</div>
 		</div>
 	</md-content>
 

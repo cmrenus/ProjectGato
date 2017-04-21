@@ -268,9 +268,10 @@ var slash = (function() {
 
 
 class musicService {
-	constructor($rootScope){
+	constructor($rootScope, spotifyService){
 		'ngInject';
 		this._$rootScope = $rootScope;
+		this._spotifyService = spotifyService;
 
 		this.getSongs();
 		this.setPlaylists();
@@ -438,6 +439,66 @@ class musicService {
 
 	}
 
+	addSpotifySongToLibrary(track_id){
+		var vm = this;
+		console.log(track_id);
+		vm._spotifyService.getSongDetails(track_id).then(function(data){
+			console.log(data);
+			vm.addSpotifySong(data.data);
+			jetpack$1.remove(userDataPath + slash + 'library.json');
+			jetpack$1.write(userDataPath + slash + 'library.json', vm.library);
+			vm._$rootScope.$broadcast('uploadedMusic');
+		},
+		function(err){
+			console.log(err);
+		});
+	}
+
+
+	addSpotifySong(song){
+		var artist, album, picture;
+		var vm = this;
+		if(song.artists && song.artists[0]){
+			artist = song.artists[0].name;
+		}
+		else{
+			artist = undefined;
+		}
+
+		if(song.album){
+			album = song.album.name;
+		}
+		else{
+			album = undefined;
+		}
+
+		if(song.album && song.album.images && song.album.images[0]){
+			picture = song.album.images[0].url;
+		}
+		else{
+			picture = undefined;
+		}
+
+		var formattedSong = {
+			title: song.name,
+			artist: artist,
+			album: album,
+			picture: picture,
+			source: 'spotify',
+			song_id: song.id,
+			preview: song.preview_url,
+			duration: song.duration_ms
+		};
+
+		if(!vm.library[song.artists[0].name]){
+			vm.library[song.artists[0].name] = {};
+		}
+		if(!vm.library[song.artists[0].name][song.album.name]){
+			vm.library[song.artists[0].name][song.album.name] = [];
+		}
+		vm.library[song.artists[0].name][song.album.name].push(new Song(formattedSong, formattedSong.picture, formattedSong.source));
+		return formattedSong;
+	}
 
 	createPlaylistFromSpotifyPlaylist(playlist){
 		var vm = this;
@@ -448,49 +509,10 @@ class musicService {
 			}
 			vm.playlists[playlist.name] = [];
 			for(var x = 0; x < playlist.tracks.length; x++){
-				var artist, album, picture;
-
-				if(playlist.tracks[x].track.artists && playlist.tracks[x].track.artists[0]){
-					artist = playlist.tracks[x].track.artists[0].name;
-				}
-				else{
-					artist = undefined;
-				}
-
-				if(playlist.tracks[x].track.album){
-					album = playlist.tracks[x].track.album.name;
-				}
-				else{
-					album = undefined;
-				}
-
-				if(playlist.tracks[x].track.album && playlist.tracks[x].track.album.images && playlist.tracks[x].track.album.images[0]){
-					picture = playlist.tracks[x].track.album.images[0].url;
-				}
-				else{
-					picture = undefined;
-				}
-
-				var song = {
-					title: playlist.tracks[x].track.name,
-					artist: artist,
-					album: album,
-					picture: picture,
-					source: 'spotify',
-					song_id: playlist.tracks[x].track.id,
-					preview: playlist.tracks[x].track.preview_url,
-					duration: playlist.tracks[x].track.duration_ms
-				};
+				var song = vm.addSpotifySong(playlist.tracks[x]);
 
 
 				vm.playlists[playlist.name].push(new Song(song, song.picture, song.source));
-				if(!vm.library[playlist.tracks[x].track.artists[0].name]){
-					vm.library[playlist.tracks[x].track.artists[0].name] = {};
-				}
-				if(!vm.library[playlist.tracks[x].track.artists[0].name][playlist.tracks[x].track.album.name]){
-					vm.library[playlist.tracks[x].track.artists[0].name][playlist.tracks[x].track.album.name] = [];
-				}
-				vm.library[playlist.tracks[x].track.artists[0].name][playlist.tracks[x].track.album.name].push(new Song(song, song.picture, song.source));
 				if(x === playlist.tracks.length - 1){
 					jetpack$1.remove(userDataPath + slash + 'playlists.json');
 					jetpack$1.write(userDataPath + slash + 'playlists.json', vm.playlists);
@@ -505,7 +527,7 @@ class musicService {
 	}
 }
 
-musicService.$inject = ['$rootScope'];
+musicService.$inject = ['$rootScope', 'spotifyService'];
 
 const {BrowserWindow} = require('electron').remote;
 
@@ -755,6 +777,19 @@ class spotifyService {
 		});
 	}
 
+	getSongDetails(track_id){
+		var vm = this;
+		return vm.getToken().then(function(token){
+			return vm._$http({
+				method: 'GET',
+				url: 'https://api.spotify.com/v1/tracks/' + track_id,
+				headers: {
+					Authorization: 'Bearer ' + token
+				}
+			});
+		});
+	}
+
 }
 
 spotifyService.$inject = ['$http', '$q', '$window'];
@@ -972,11 +1007,14 @@ class spotifyUploadCtrl {
 		this._musicService = musicService;
 		var vm = this;
 		this._$scope = $scope;
+		this.loggedIn = spotifyService.authenticated();
+		this.loading = true;
 		if(spotifyService.authenticated()){
 			spotifyService.getUserPlaylists().then(function(data){
 				//console.log(data);
 				$scope.$apply(function(){
 					vm.playlists = data.data.items;
+					vm.loading = false;
 				});
 			},
 			function(err){
@@ -1033,6 +1071,28 @@ class spotifyUploadCtrl {
 			console.log(err);
 		});
 	};
+
+	addToLibrary(URI){
+		var parsed = URI.split(':');
+		var vm = this;
+		if(parsed[0] !== 'spotify'){
+			alert('invalid uri');
+		}
+		else{
+			if(parsed[1] === 'track'){
+				vm._musicService.addSpotifySongToLibrary(parsed[2]);
+			}
+			else if(parsed[1] === 'album'){
+
+			}
+			else if(parsed[1] === 'playlist'){
+				
+			}
+			else{
+
+			}
+		}
+	}
 
 }
 

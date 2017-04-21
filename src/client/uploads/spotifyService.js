@@ -248,6 +248,19 @@ export default class spotifyService {
 		});
 	}
 
+	getSongDetails(track_id){
+		var vm = this;
+		return vm.getToken().then(function(token){
+			return vm._$http({
+				method: 'GET',
+				url: 'https://api.spotify.com/v1/tracks/' + track_id,
+				headers: {
+					Authorization: 'Bearer ' + token
+				}
+			});
+		});
+	}
+
 }
 
 spotifyService.$inject = ['$http', '$q', '$window'];
