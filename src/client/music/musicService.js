@@ -226,7 +226,7 @@ export default class musicService {
 					source: 'spotify',
 					song_id: playlist.tracks[x].track.id,
 					preview: playlist.tracks[x].track.preview_url,
-					duration: playlist.tracks[x].track.duration
+					duration: playlist.tracks[x].track.duration_ms
 				}
 
 

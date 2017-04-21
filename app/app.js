@@ -479,7 +479,7 @@ class musicService {
 					source: 'spotify',
 					song_id: playlist.tracks[x].track.id,
 					preview: playlist.tracks[x].track.preview_url,
-					duration: playlist.tracks[x].track.duration
+					duration: playlist.tracks[x].track.duration_ms
 				};
 
 
@@ -1038,6 +1038,7 @@ class playlistsCtrl {
 		this._musicService = musicService;
 		this._$scope = $scope;
 		this.init();
+		this.currentPlaylist = {};
 	}
 
 	init(){
@@ -1053,9 +1054,22 @@ class playlistsCtrl {
 		this._$scope.musicControls.state.playlistSelected = false;
 	}
 
-	selectPlaylist(i){
+	selectPlaylist(name){
 		this._$scope.musicControls.state.playlistSelected = true;
-		this._$scope.musicControls.songs = this.playlists[i];
+		this._$scope.musicControls.songs = this.playlists[name];
+		this.currentPlaylist = {
+			name: name,
+			duration: 0,
+			count: this.playlists[name].length
+		};
+		var vm = this;
+		for(var x = 0; x < this.playlists[name].length; x++){
+			vm.currentPlaylist.duration += Number(vm.playlists[name][x].duration);
+			if(x === vm.playlists[name].length - 1){
+				vm._$scope.$apply();
+			}
+			//console.log(vm.playlists[name][x].duration);
+		}
 	}
 }
 
