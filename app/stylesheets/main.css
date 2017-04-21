@@ -14,9 +14,15 @@
 }
 .music-bar .progress-bar-container {
   height: 6px;
+  user-select: none;
+  /* Chrome all / Safari all */
+  outline: none;
+  border: 0;
 }
 .music-bar .progress-bar-container .progress-bar {
   height: 100%;
+  user-select: none;
+  /* Chrome all / Safari all */
 }
 .music-bar .music-controls-container {
   display: flex;
@@ -51,6 +57,8 @@
 }
 .music-bar .music-controls-container .music-controls i {
   margin: 0 10px;
+  outline: none;
+  border: 0;
 }
 .music-bar .music-controls-container .music-controls i:hover {
   cursor: pointer;

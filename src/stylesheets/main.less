@@ -16,9 +16,13 @@
 
     .progress-bar-container {
         height: 6px;
+        user-select: none;  /* Chrome all / Safari all */
+        outline: none;
+        border: 0;
 
         .progress-bar {
             height: 100%;
+            user-select: none;  /* Chrome all / Safari all */
         }
     }
 
@@ -60,6 +64,8 @@
 
             i {
                 margin: 0 10px;
+                outline: none;
+                border: 0;
 
                 &:hover {
                     cursor: pointer;

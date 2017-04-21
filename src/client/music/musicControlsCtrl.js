@@ -88,6 +88,12 @@ export default class musicControlsCtrl {
 		this.songs = this.albums[i].songs;
 	}
 
+	setTime() {
+		var percent = event.clientX/window.innerWidth;
+		var newTime = percent * this.player.duration;
+		this.player.currentTime = newTime;
+	}
+
 	setSong(i) {
 		this.currentSong = this.songs[this.songs.indexOf(i)];
 		this.pause();
