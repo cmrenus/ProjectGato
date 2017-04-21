@@ -422,6 +422,7 @@ class musicService {
 			return {};
 		}
 	}
+
 	getPlaylists(){
 		return this.playlists || {};
 	}
@@ -438,9 +439,9 @@ class musicService {
 	}
 
 
-
 	createPlaylistFromSpotifyPlaylist(playlist){
 		var vm = this;
+
 		return new Promise(function(reject, resolve){
 			if(vm.playlists[playlist.name]){
 				reject('playlist already exists');
@@ -760,7 +761,7 @@ class musicControlsCtrl {
 		this.primaryColor = colorService.getThemeColor('primary', 'default');
 		this.accentColor = colorService.getThemeColor('accent', 'default');
 		this.status = 'paused';
-		this.volume = 35;
+		this.volume = 100;
 		this.library = {};
 		this.songs = [];
 		this.artists = [];
@@ -771,6 +772,12 @@ class musicControlsCtrl {
 		this.currentSong = null;
 		var vm = this;
 		this._musicService = musicService;
+
+		this.state = {
+			albumSelected: false,
+			artistSelected: false,
+			playlistSelected: false
+		};
 
 		$scope.$watch(function(){return colorService.getThemeColor('primary', 'default')}, function(newVal, oldVal, scope){
 	      if(newVal){
@@ -786,25 +793,26 @@ class musicControlsCtrl {
 
 		$scope.$on('uploadedMusic', function(e){
 			vm.library = vm._musicService.getSongs();
-			console.log(vm.library);
 			vm.songs = vm.library.songs;
+			vm.currentSong = vm.songs[0];
 			vm.albums = vm.library.albums;
 			vm.artists = vm.library.artists;
 		});
 
 		this.library = musicService.getSongs();
-		console.log('heres the library');
-		console.log(this.library);
 		if(this.library) {
 			this.songs = this.library.songs;
+			this.currentSong = this.songs[0];
 			this.albums = this.library.albums;
 			this.artists = this.library.artists;
 		}
 
 		function update() {
 			if(vm.status === 'playing') {
-				vm.percentPlayed = vm.player.currentTime/vm.player.duration * 100;
-				$scope.$apply();
+				$scope.$apply(function() {
+					vm.percentPlayed = vm.player.currentTime/vm.player.duration * 100;
+					vm.player.volume = vm.volume/100;
+				});
 			}
 			window.requestAnimationFrame(update);
 		}
@@ -812,6 +820,15 @@ class musicControlsCtrl {
 		window.requestAnimationFrame(update);
 
 	};
+
+	selectLibrary() {
+		this.songs = this.library.songs;
+	}
+
+	selectAlbum(i) {
+		this.state.albumSelected = true;
+		this.songs = this.albums[i].songs;
+	}
 
 	setSong(i) {
 		this.currentSong = this.songs[this.songs.indexOf(i)];

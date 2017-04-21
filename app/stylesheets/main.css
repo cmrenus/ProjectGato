@@ -64,3 +64,21 @@
 .music-bar .music-controls-container .music-extras {
   flex: 1;
 }
+.panel-container {
+  padding: 20px;
+}
+.panel-container .panel-header {
+  margin-left: 8px;
+}
+.panel-container .row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.panel-container .card {
+  width: 20%;
+}
+.songs-container {
+  border: 1px solid #efefef;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+}
