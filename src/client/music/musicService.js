@@ -29,8 +29,8 @@ export default class musicService {
 		if(jetpack.read(userDataPath + slash + 'library.json')) {
 			console.log('hi');
 			this.library = JSON.parse(jetpack.read(userDataPath + slash + 'library.json'));
-			var songs = this.createSongsList();
-			return songs;
+			var music = this.createLibrary();
+			return music;
 		}
 		else {
 			console.log('No existing library');
@@ -38,20 +38,45 @@ export default class musicService {
 		}
 	}
 
-	createSongsList() {
-		var songs = []
+	createLibrary() {
+		var songs = [];
+		var artistsObj = {};
+		var artists = [];
+		var albumsObj = {};
+		var albums = [];
 		for (var key1 in this.library) {
 			if (this.library.hasOwnProperty(key1)) {
+				artistsObj[key1] = [];
 				for (var key2 in this.library[key1]) {
 					if (this.library[key1].hasOwnProperty(key2)) {
+						albumsObj[key2] = [];
 						for (var i = 0; i < this.library[key1][key2].length; i++) {
 							songs.push(this.library[key1][key2][i]);
+							artistsObj[key1].push(this.library[key1][key2][i]);
+							albumsObj[key2].push(this.library[key1][key2][i])
 						}
 					}
 				}
 			}
 		}
-		return songs;
+
+		for (var key in artistsObj) {
+			if(artistsObj.hasOwnProperty(key)) {
+				artists.push({artist: key, songs: artistsObj[key]});
+			}
+		}
+
+		for (var key in albumsObj) {
+			if(albumsObj.hasOwnProperty(key)) {
+				albums.push({album: key, songs: albumsObj[key]});
+			}
+		}
+
+		return {
+			songs: songs,
+			artists: artists,
+			albums: albums
+		};
 	}
 
 	libraryEmpty(){

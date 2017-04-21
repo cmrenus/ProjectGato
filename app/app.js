@@ -282,8 +282,8 @@ class musicService {
 		if(jetpack$1.read(userDataPath + slash + 'library.json')) {
 			console.log('hi');
 			this.library = JSON.parse(jetpack$1.read(userDataPath + slash + 'library.json'));
-			var songs = this.createSongsList();
-			return songs;
+			var music = this.createLibrary();
+			return music;
 		}
 		else {
 			console.log('No existing library');
@@ -291,20 +291,45 @@ class musicService {
 		}
 	}
 
-	createSongsList() {
+	createLibrary() {
 		var songs = [];
+		var artistsObj = {};
+		var artists = [];
+		var albumsObj = {};
+		var albums = [];
 		for (var key1 in this.library) {
 			if (this.library.hasOwnProperty(key1)) {
+				artistsObj[key1] = [];
 				for (var key2 in this.library[key1]) {
 					if (this.library[key1].hasOwnProperty(key2)) {
+						albumsObj[key2] = [];
 						for (var i = 0; i < this.library[key1][key2].length; i++) {
 							songs.push(this.library[key1][key2][i]);
+							artistsObj[key1].push(this.library[key1][key2][i]);
+							albumsObj[key2].push(this.library[key1][key2][i]);
 						}
 					}
 				}
 			}
 		}
-		return songs;
+
+		for (var key in artistsObj) {
+			if(artistsObj.hasOwnProperty(key)) {
+				artists.push({artist: key, songs: artistsObj[key]});
+			}
+		}
+
+		for (var key in albumsObj) {
+			if(albumsObj.hasOwnProperty(key)) {
+				albums.push({album: key, songs: albumsObj[key]});
+			}
+		}
+
+		return {
+			songs: songs,
+			artists: artists,
+			albums: albums
+		};
 	}
 
 	libraryEmpty(){
@@ -397,7 +422,6 @@ class musicService {
 			return {};
 		}
 	}
-
 	getPlaylists(){
 		return this.playlists || {};
 	}
@@ -414,9 +438,9 @@ class musicService {
 	}
 
 
+
 	createPlaylistFromSpotifyPlaylist(playlist){
 		var vm = this;
-
 		return new Promise(function(reject, resolve){
 			if(vm.playlists[playlist.name]){
 				reject('playlist already exists');
@@ -743,6 +767,7 @@ class musicControlsCtrl {
 		this.albums = [];
 		this.index = 0;
 		this.player = document.getElementById('music-player');
+		this.percentPlayed = 0;
 		this.currentSong = null;
 		var vm = this;
 		this._musicService = musicService;
@@ -761,11 +786,31 @@ class musicControlsCtrl {
 
 		$scope.$on('uploadedMusic', function(e){
 			vm.library = vm._musicService.getSongs();
-			vm.songs = vm.library;
+			console.log(vm.library);
+			vm.songs = vm.library.songs;
+			vm.albums = vm.library.albums;
+			vm.artists = vm.library.artists;
 		});
 
 		this.library = musicService.getSongs();
-		this.songs = this.library;
+		console.log('heres the library');
+		console.log(this.library);
+		if(this.library) {
+			this.songs = this.library.songs;
+			this.albums = this.library.albums;
+			this.artists = this.library.artists;
+		}
+
+		function update() {
+			if(vm.status === 'playing') {
+				vm.percentPlayed = vm.player.currentTime/vm.player.duration * 100;
+				$scope.$apply();
+			}
+			window.requestAnimationFrame(update);
+		}
+
+		window.requestAnimationFrame(update);
+
 	};
 
 	setSong(i) {
