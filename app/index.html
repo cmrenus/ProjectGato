@@ -115,7 +115,7 @@
 			<audio id="music-player" ng-src="{{musicControls.currentSong.path}}"></audio>
 			<div flex id='content' ng-view layout></div>
 			<md-content class="music-bar">
-				<div class='progress-bar-container'>
+				<div ng-click="musicControls.setTime()" class='progress-bar-container'>
 					<div class='progress-bar' ng-style='{"background-color": musicControls.primaryColor, "width": musicControls.percentPlayed + "%"}'>
 
 					</div>
