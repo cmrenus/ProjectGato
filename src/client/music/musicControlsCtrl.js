@@ -26,6 +26,7 @@ export default class musicControlsCtrl {
 		this.albums = [];
 		this.index = 0;
 		this.player = document.getElementById('music-player');
+		this.percentPlayed = 0;
 		this.currentSong = null;
 		var vm = this;
 		this._musicService = musicService;
@@ -44,11 +45,31 @@ export default class musicControlsCtrl {
 
 		$scope.$on('uploadedMusic', function(e){
 			vm.library = vm._musicService.getSongs();
-			vm.songs = vm.library;
+			console.log(vm.library);
+			vm.songs = vm.library.songs;
+			vm.albums = vm.library.albums;
+			vm.artists = vm.library.artists;
 		});
 
 		this.library = musicService.getSongs();
-		this.songs = this.library;
+		console.log('heres the library');
+		console.log(this.library);
+		if(this.library) {
+			this.songs = this.library.songs;
+			this.albums = this.library.albums;
+			this.artists = this.library.artists;
+		}
+
+		function update() {
+			if(vm.status === 'playing') {
+				vm.percentPlayed = vm.player.currentTime/vm.player.duration * 100;
+				$scope.$apply();
+			}
+			window.requestAnimationFrame(update);
+		}
+
+		window.requestAnimationFrame(update);
+
 	};
 
 	setSong(i) {

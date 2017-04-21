@@ -273,6 +273,7 @@ class musicService {
 		this._$rootScope = $rootScope;
 
 		this.getSongs();
+		this.getPlaylists();
 	}
 
 	getSongs() {
@@ -281,8 +282,8 @@ class musicService {
 		if(jetpack$1.read(userDataPath + slash + 'library.json')) {
 			console.log('hi');
 			this.library = JSON.parse(jetpack$1.read(userDataPath + slash + 'library.json'));
-			var songs = this.createSongsList();
-			return songs;
+			var music = this.createLibrary();
+			return music;
 		}
 		else {
 			console.log('No existing library');
@@ -290,20 +291,45 @@ class musicService {
 		}
 	}
 
-	createSongsList() {
+	createLibrary() {
 		var songs = [];
+		var artistsObj = {};
+		var artists = [];
+		var albumsObj = {};
+		var albums = [];
 		for (var key1 in this.library) {
 			if (this.library.hasOwnProperty(key1)) {
+				artistsObj[key1] = [];
 				for (var key2 in this.library[key1]) {
 					if (this.library[key1].hasOwnProperty(key2)) {
+						albumsObj[key2] = [];
 						for (var i = 0; i < this.library[key1][key2].length; i++) {
 							songs.push(this.library[key1][key2][i]);
+							artistsObj[key1].push(this.library[key1][key2][i]);
+							albumsObj[key2].push(this.library[key1][key2][i]);
 						}
 					}
 				}
 			}
 		}
-		return songs;
+
+		for (var key in artistsObj) {
+			if(artistsObj.hasOwnProperty(key)) {
+				artists.push({artist: key, songs: artistsObj[key]});
+			}
+		}
+
+		for (var key in albumsObj) {
+			if(albumsObj.hasOwnProperty(key)) {
+				albums.push({album: key, songs: albumsObj[key]});
+			}
+		}
+
+		return {
+			songs: songs,
+			artists: artists,
+			albums: albums
+		};
 	}
 
 	libraryEmpty(){
@@ -383,6 +409,50 @@ class musicService {
 						});
 				});
 		});
+	}
+
+	getPlaylists() {
+		if(jetpack$1.read(userDataPath + slash + 'playlists.json')) {
+			this.playlists = JSON.parse(jetpack$1.read(userDataPath + slash + 'playlists.json'));
+			return playlists;
+		}
+		else {
+			console.log('No existing playlists');
+			this.playlists = {};
+			return {};
+		}
+	}
+
+	createPlaylist(playlist_name) {
+		//this.playlist = {};
+		this.playlists[playlist.name] = [];
+		jetpack$1.write(userDataPath + slash + 'playlists.json', this.playlists);
+	}
+
+
+
+	createPlaylistFromSpotifyPlaylist(playlist){
+		var vm = this;
+		if(vm.playlists[playlist.name]){
+			return new Error('playlist already exists');
+		}
+		vm.playlists[playlist.name] = [];
+		for(var x = 0; x < playlist.tracks.length; x++){
+			vm.playlists[playlist.name].push({
+				title: playlist.tracks.name,
+				artist: playlist.tracks.artists[0].name,
+				album: playlists.tracks.album.name,
+				picture: playlists.tracks.album.images[0].url,
+				source: 'spotify',
+				song_id: playlist.track.id,
+				preview: playlist.track.preview_url
+			});
+			if(x - 1 === playlist.tracks.length){
+				jetpack$1.write(userDataPath + slash + 'playlists.json', vm.playlists);
+				return true;
+			}
+		}
+
 	}
 }
 
@@ -686,6 +756,7 @@ class musicControlsCtrl {
 		this.albums = [];
 		this.index = 0;
 		this.player = document.getElementById('music-player');
+		this.percentPlayed = 0;
 		this.currentSong = null;
 		var vm = this;
 		this._musicService = musicService;
@@ -704,11 +775,31 @@ class musicControlsCtrl {
 
 		$scope.$on('uploadedMusic', function(e){
 			vm.library = vm._musicService.getSongs();
-			vm.songs = vm.library;
+			console.log(vm.library);
+			vm.songs = vm.library.songs;
+			vm.albums = vm.library.albums;
+			vm.artists = vm.library.artists;
 		});
 
 		this.library = musicService.getSongs();
-		this.songs = this.library;
+		console.log('heres the library');
+		console.log(this.library);
+		if(this.library) {
+			this.songs = this.library.songs;
+			this.albums = this.library.albums;
+			this.artists = this.library.artists;
+		}
+
+		function update() {
+			if(vm.status === 'playing') {
+				vm.percentPlayed = vm.player.currentTime/vm.player.duration * 100;
+				$scope.$apply();
+			}
+			window.requestAnimationFrame(update);
+		}
+
+		window.requestAnimationFrame(update);
+
 	};
 
 	setSong(i) {
@@ -852,6 +943,10 @@ class spotifyUploadCtrl {
 		function(err){
 			console.log(err);
 		});
+	}
+
+	addPlaylist(playlist){
+		
 	}
 
 }
