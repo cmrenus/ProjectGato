@@ -1,10 +1,11 @@
 
 
 export default class playlistsCtrl {
-	constructor(musicService, $scope){
+	constructor(musicService, $scope, $mdDialog){
 		'ngInject';
 		this._musicService = musicService;
 		this._$scope = $scope;
+		this._$mdDialog = $mdDialog;
 		this.init();
 		this.currentPlaylist = {};
 	}
@@ -39,6 +40,25 @@ export default class playlistsCtrl {
 			//console.log(vm.playlists[name][x].duration);
 		}
 	}
+
+	addPlaylist(ev){
+		var vm = this;
+		var confirm = this._$mdDialog.prompt()
+    	.title('What will you name your playlist?')
+    	.placeholder('Playlist Name')
+    	.ariaLabel('Playlist Name')
+    	.initialValue('')
+    	.targetEvent(ev)
+    	.ok('Add Playlist')
+    	.cancel('Cancel');
+
+	    this._$mdDialog.show(confirm).then(function(result) {
+	    	vm._musicService.createPlaylist(result);
+	    	vm.playlists = vm._musicService.getPlaylists();
+	    }, function() {
+
+	    });
+	}
 }
 
-playlistsCtrl.$inject = ['musicService', '$scope'];
+playlistsCtrl.$inject = ['musicService', '$scope', '$mdDialog'];
