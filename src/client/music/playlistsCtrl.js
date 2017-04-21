@@ -18,6 +18,12 @@ export default class playlistsCtrl {
 			}
 		}, true);
 		console.log(this.playlists);
+		this._$scope.musicControls.state.playlistSelected = false;
+	}
+
+	selectPlaylist(i){
+		this._$scope.musicControls.state.playlistSelected = true;
+		this._$scope.musicControls.songs = this.playlists[i];
 	}
 }
 
