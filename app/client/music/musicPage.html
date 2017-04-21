@@ -103,7 +103,7 @@
 						</h4>
 					</a>
 				</div>
-				<md-list-item layout="row" ng-repeat="song in musicControls.songs | filter: musicCtrl.searchbar.searchQuery | orderBy: musicCtrl.predicate: musicCtrl.reverse" ng-click="musicControls.setSong(song)" class="noright">
+				<md-list-item layout="row" ng-repeat="song in musicControls.songs | filter: musicCtrl.searchbar.searchQuery | orderBy: musicCtrl.predicate: musicCtrl.reverse track by $index" ng-click="musicControls.setSong(song)" class="noright">
 					<img ng-src="{{ song.picture }}" class="md-avatar"/>
 					<div flex="33" class="md-list-item-text">
 						<p>{{ song.title }}</p>
