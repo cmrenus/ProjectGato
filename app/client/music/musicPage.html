@@ -43,7 +43,7 @@
 	<md-content layout-padding flex>
 		<ng-switch on="musicCtrl.currentTab" class="tabpanel-container">
 			<div role='tabpanel' id='playlists-tab-content' aria-labeledby='playlists-tab' ng-switch-when="0">
-				<h3>Playlists</h3>
+				<ng-include src='"./client/music/playlists.html"'></ng-include>
 			</div>
 			<div role='tabpanel' id='playlists-tab-content' aria-labeledby='playlists-tab' ng-switch-when="1">
 				<h3>Artists</h3>

@@ -1,10 +1,11 @@
 
 export default class spotifyUploadCtrl {
-	constructor(spotifyService, $scope){
+	constructor(spotifyService, $scope, musicService){
 		'ngInject';
 		console.log('contructed');
 		this._spotifyService = spotifyService;
 		this.playlists = [];
+		this._musicService = musicService;
 		var vm = this;
 		this._$scope = $scope;
 		if(spotifyService.authenticated()){
@@ -61,9 +62,14 @@ export default class spotifyUploadCtrl {
 	}
 
 	addPlaylist(playlist){
-		
-	}
+		this._musicService.createPlaylistFromSpotifyPlaylist(playlist).then(function(){
+			console.log('Playlist Added');
+		},
+		function(err){
+			console.log(err);
+		});
+	};
 
 };
 
-spotifyUploadCtrl.$inject = ['spotifyService', '$scope'];
+spotifyUploadCtrl.$inject = ['spotifyService', '$scope', 'musicService'];

@@ -22,6 +22,7 @@ import rootCtrl from './client/root/rootCtrl';
 import musicControlsCtrl from './client/music/musicControlsCtrl';
 import musicCtrl from './client/music/musicCtrl';
 import spotifyUploadCtrl from './client/uploads/spotifyUploadCtrl';
+import playlistsCtrl from './client/music/playlistsCtrl';
 
 (function(){
 	"use strict";
@@ -38,6 +39,7 @@ import spotifyUploadCtrl from './client/uploads/spotifyUploadCtrl';
 	.controller('musicControlsCtrl', musicControlsCtrl)
 	.controller('spotifyUploadCtrl', spotifyUploadCtrl)
 	.controller('musicCtrl', musicCtrl)
+	.controller('playlistsCtrl', playlistsCtrl)
 	.filter('formatDuration', function () {
 	    return function (input) {
 	        var totalHours, totalMinutes, totalSeconds, hours, minutes, seconds, result='';
@@ -77,6 +79,9 @@ import spotifyUploadCtrl from './client/uploads/spotifyUploadCtrl';
 		$routeProvider
 		.when('/', {
 			templateUrl: './client/landing/welcome.html'
+		})
+		.when('/music/:currentTab/:item', {
+			templateUrl: './client/music/musicPage.html'
 		})
 		.when('/music/:currentTab', {
 			templateUrl: './client/music/musicPage.html'

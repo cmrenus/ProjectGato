@@ -273,6 +273,7 @@ class musicService {
 		this._$rootScope = $rootScope;
 
 		this.getSongs();
+		this.setPlaylists();
 	}
 
 	getSongs() {
@@ -383,6 +384,62 @@ class musicService {
 						});
 				});
 		});
+	}
+
+	setPlaylists() {
+		if(jetpack$1.read(userDataPath + slash + 'playlists.json')) {
+			this.playlists = JSON.parse(jetpack$1.read(userDataPath + slash + 'playlists.json'));
+			return this.playlists;
+		}
+		else {
+			console.log('No existing playlists');
+			this.playlists = {};
+			return {};
+		}
+	}
+
+	getPlaylists(){
+		return this.playlists || {};
+	}
+
+	createPlaylist(playlist_name) {
+		//this.playlist = {};
+		this.playlists[playlist_name] = [];
+		jetpack$1.remove(userDataPath + slash + 'playlists.json');
+		jetpack$1.write(userDataPath + slash + 'playlists.json', this.playlists);
+	}
+
+	addToPlaylist(song, playlist_name, source) {
+
+	}
+
+
+	createPlaylistFromSpotifyPlaylist(playlist){
+		var vm = this;
+
+		return new Promise(function(reject, resolve){
+			if(vm.playlists[playlist.name]){
+				reject('playlist already exists');
+			}
+			vm.playlists[playlist.name] = [];
+			for(var x = 0; x < playlist.tracks.length; x++){
+				vm.playlists[playlist.name].push({
+					title: playlist.tracks[x].track.name,
+					artist: playlist.tracks[x].track.artists[0].name,
+					album: playlist.tracks[x].track.album.name,
+					picture: playlist.tracks[x].track.album.images[0].url,
+					source: 'spotify',
+					song_id: playlist.tracks[x].track.id,
+					preview: playlist.tracks[x].track.preview_url
+				});
+				if(x === playlist.tracks.length - 1){
+					jetpack$1.remove(userDataPath + slash + 'playlists.json');
+					jetpack$1.write(userDataPath + slash + 'playlists.json', vm.playlists);
+					resolve();
+				}
+			}
+		})
+
 	}
 }
 
@@ -766,7 +823,7 @@ class musicControlsCtrl {
 musicControlsCtrl.$inject = ['colorService', '$scope', 'musicService'];
 
 class musicCtrl {
-	constructor($routeParams){
+	constructor($routeParams, musicService){
 		'ngInject';
 		this.reverse = false;
 		this.predicate = ['artist', 'title'];
@@ -794,11 +851,12 @@ class musicCtrl {
 musicCtrl.$inject = ['$routeParams'];
 
 class spotifyUploadCtrl {
-	constructor(spotifyService, $scope){
+	constructor(spotifyService, $scope, musicService){
 		'ngInject';
 		console.log('contructed');
 		this._spotifyService = spotifyService;
 		this.playlists = [];
+		this._musicService = musicService;
 		var vm = this;
 		this._$scope = $scope;
 		if(spotifyService.authenticated()){
@@ -854,9 +912,41 @@ class spotifyUploadCtrl {
 		});
 	}
 
+	addPlaylist(playlist){
+		this._musicService.createPlaylistFromSpotifyPlaylist(playlist).then(function(){
+			console.log('Playlist Added');
+		},
+		function(err){
+			console.log(err);
+		});
+	};
+
 }
 
-spotifyUploadCtrl.$inject = ['spotifyService', '$scope'];
+spotifyUploadCtrl.$inject = ['spotifyService', '$scope', 'musicService'];
+
+class playlistsCtrl {
+	constructor(musicService, $scope){
+		'ngInject';
+		this._musicService = musicService;
+		this._$scope = $scope;
+		this.init();
+	}
+
+	init(){
+		this.playlists = this._musicService.getPlaylists();
+		var vm = this;
+		vm._$scope.$watch(function(){return vm._musicService.getPlaylists()}, function(newVal, oldVal, scope){
+			if(newVal){
+				vm.playlists = newVal;
+				console.log(vm.playlists);
+			}
+		}, true);
+		console.log(this.playlists);
+	}
+}
+
+playlistsCtrl.$inject = ['musicService', '$scope'];
 
 // Here is the starting point for your application code.
 // All stuff below is just to show you how it works. You can delete all of it.
@@ -878,6 +968,7 @@ spotifyUploadCtrl.$inject = ['spotifyService', '$scope'];
 	.controller('musicControlsCtrl', musicControlsCtrl)
 	.controller('spotifyUploadCtrl', spotifyUploadCtrl)
 	.controller('musicCtrl', musicCtrl)
+	.controller('playlistsCtrl', playlistsCtrl)
 	.filter('formatDuration', function () {
 	    return function (input) {
 	        var totalHours, totalMinutes, totalSeconds, hours, minutes, seconds, result='';
@@ -917,6 +1008,9 @@ spotifyUploadCtrl.$inject = ['spotifyService', '$scope'];
 		$routeProvider
 		.when('/', {
 			templateUrl: './client/landing/welcome.html'
+		})
+		.when('/music/:currentTab/:item', {
+			templateUrl: './client/music/musicPage.html'
 		})
 		.when('/music/:currentTab', {
 			templateUrl: './client/music/musicPage.html'

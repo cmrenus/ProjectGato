@@ -1,0 +1,15 @@
+<div ng-controller='playlistsCtrl as p'>
+	<h1>All Playlists</h1>
+	<div layout='row'>
+		<md-card flex='10' ng-repeat='(key,val) in p.playlists'>
+		<a ng-href='#/music/playlists/{{ key }}'>
+			<img ng-src="{{val[0].picture}}" width='100%' class="md-card-image" alt="">
+			<md-card-title>
+				<md-card-title-text style='text-overflow: ellipsis;overflow: hidden;'>
+					<md-truncate><span class="md-headline">{{ key }}</span></md-truncate>
+				</md-card-title-text>
+			</md-card-title>
+		</a>
+		</md-card>
+	</div>
+</div>

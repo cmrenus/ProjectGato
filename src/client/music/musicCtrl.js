@@ -1,7 +1,7 @@
 
 
 export default class musicCtrl {
-	constructor($routeParams){
+	constructor($routeParams, musicService){
 		'ngInject'
 		this.reverse = false;
 		this.predicate = ['artist', 'title'];
