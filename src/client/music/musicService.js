@@ -15,10 +15,11 @@ var slash = (function() {
 
 
 export default class musicService {
-	constructor($rootScope, spotifyService){
+	constructor($rootScope, spotifyService, $mdToast){
 		'ngInject';
 		this._$rootScope = $rootScope;
 		this._spotifyService = spotifyService;
+		this._$mdToast = $mdToast;
 
 		this.getSongs();
 		this.setPlaylists();
@@ -194,7 +195,7 @@ export default class musicService {
 			vm.addSpotifySong(data.data);
 			jetpack.remove(userDataPath + slash + 'library.json');
 			jetpack.write(userDataPath + slash + 'library.json', vm.library);
-			vm._$rootScope.$broadcast('uploadedMusic');
+			//vm._$rootScope.$broadcast('uploadedMusic');
 		},
 		function(err){
 			console.log(err);
@@ -274,4 +275,4 @@ export default class musicService {
 	}
 }
 
-musicService.$inject = ['$rootScope', 'spotifyService'];
+musicService.$inject = ['$rootScope', 'spotifyService', '$mdToast'];

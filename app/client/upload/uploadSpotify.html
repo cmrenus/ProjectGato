@@ -9,6 +9,7 @@
 	
 	<md-content ng-show='spotify.loggedIn' layout='column' layout-padding>
 		<div>
+			<h2>Add songs from Spotify</h2>
 			<md-input-container>
         		<label>Add by URI</label>
         		<input ng-model="spotify.URI">
@@ -16,6 +17,9 @@
       		<md-button class='md-raised md-accent' ng-click='spotify.addToLibrary(spotify.URI)'>Add to Library</md-button>
       	</div>
       	<div ng-show='spotify.loading'><span>Loading...</span></div>
+      	<div ng-hide='spotify.loading'>
+      		<h2>Add Playlists From Spotify</h2>
+      	</div>
 		<div ng-hide='spotify.loading' layout="row">
 			<div flex='25'>
 				<md-list flex ng-show='spotify.playlists' class='md-dense'>

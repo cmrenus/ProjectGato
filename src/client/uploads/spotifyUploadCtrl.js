@@ -1,11 +1,12 @@
 
 export default class spotifyUploadCtrl {
-	constructor(spotifyService, $scope, musicService){
+	constructor(spotifyService, $scope, musicService, $mdToast){
 		'ngInject';
 		console.log('contructed');
 		this._spotifyService = spotifyService;
 		this.playlists = [];
 		this._musicService = musicService;
+		this._$mdToast = $mdToast;
 		var vm = this;
 		this._$scope = $scope;
 		this.loggedIn = spotifyService.authenticated();
@@ -67,6 +68,15 @@ export default class spotifyUploadCtrl {
 	addPlaylist(playlist){
 		this._musicService.createPlaylistFromSpotifyPlaylist(playlist).then(function(){
 			console.log('Playlist Added');
+			vm._$mdToast.show({
+				template: '<md-toast>' +
+					          '<div class="md-toast-content">' +
+					            'Playlist Added!' +
+					          '</div>' +
+					        '</md-toast>',
+				position: 'top right',
+				parent: document.getElementById('content')
+			});
 		},
 		function(err){
 			console.log(err);
@@ -82,6 +92,15 @@ export default class spotifyUploadCtrl {
 		else{
 			if(parsed[1] === 'track'){
 				vm._musicService.addSpotifySongToLibrary(parsed[2]);
+				vm._$mdToast.show({
+					template: '<md-toast>' +
+						          '<div class="md-toast-content">' +
+						            'Song Added!' +
+						          '</div>' +
+						        '</md-toast>',
+					position: 'top right',
+					parent: document.getElementById('content')
+				});
 			}
 			else if(parsed[1] === 'album'){
 
@@ -97,4 +116,4 @@ export default class spotifyUploadCtrl {
 
 };
 
-spotifyUploadCtrl.$inject = ['spotifyService', '$scope', 'musicService'];
+spotifyUploadCtrl.$inject = ['spotifyService', '$scope', 'musicService', '$mdToast'];

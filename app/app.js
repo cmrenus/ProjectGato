@@ -268,10 +268,11 @@ var slash = (function() {
 
 
 class musicService {
-	constructor($rootScope, spotifyService){
+	constructor($rootScope, spotifyService, $mdToast){
 		'ngInject';
 		this._$rootScope = $rootScope;
 		this._spotifyService = spotifyService;
+		this._$mdToast = $mdToast;
 
 		this.getSongs();
 		this.setPlaylists();
@@ -447,7 +448,7 @@ class musicService {
 			vm.addSpotifySong(data.data);
 			jetpack$1.remove(userDataPath + slash + 'library.json');
 			jetpack$1.write(userDataPath + slash + 'library.json', vm.library);
-			vm._$rootScope.$broadcast('uploadedMusic');
+			//vm._$rootScope.$broadcast('uploadedMusic');
 		},
 		function(err){
 			console.log(err);
@@ -527,7 +528,7 @@ class musicService {
 	}
 }
 
-musicService.$inject = ['$rootScope', 'spotifyService'];
+musicService.$inject = ['$rootScope', 'spotifyService', '$mdToast'];
 
 const {BrowserWindow} = require('electron').remote;
 
@@ -999,12 +1000,13 @@ class musicCtrl {
 musicCtrl.$inject = ['$routeParams'];
 
 class spotifyUploadCtrl {
-	constructor(spotifyService, $scope, musicService){
+	constructor(spotifyService, $scope, musicService, $mdToast){
 		'ngInject';
 		console.log('contructed');
 		this._spotifyService = spotifyService;
 		this.playlists = [];
 		this._musicService = musicService;
+		this._$mdToast = $mdToast;
 		var vm = this;
 		this._$scope = $scope;
 		this.loggedIn = spotifyService.authenticated();
@@ -1066,6 +1068,15 @@ class spotifyUploadCtrl {
 	addPlaylist(playlist){
 		this._musicService.createPlaylistFromSpotifyPlaylist(playlist).then(function(){
 			console.log('Playlist Added');
+			vm._$mdToast.show({
+				template: '<md-toast>' +
+					          '<div class="md-toast-content">' +
+					            'Playlist Added!' +
+					          '</div>' +
+					        '</md-toast>',
+				position: 'top right',
+				parent: document.getElementById('content')
+			});
 		},
 		function(err){
 			console.log(err);
@@ -1081,6 +1092,15 @@ class spotifyUploadCtrl {
 		else{
 			if(parsed[1] === 'track'){
 				vm._musicService.addSpotifySongToLibrary(parsed[2]);
+				vm._$mdToast.show({
+					template: '<md-toast>' +
+						          '<div class="md-toast-content">' +
+						            'Song Added!' +
+						          '</div>' +
+						        '</md-toast>',
+					position: 'top right',
+					parent: document.getElementById('content')
+				});
 			}
 			else if(parsed[1] === 'album'){
 
@@ -1096,7 +1116,7 @@ class spotifyUploadCtrl {
 
 }
 
-spotifyUploadCtrl.$inject = ['spotifyService', '$scope', 'musicService'];
+spotifyUploadCtrl.$inject = ['spotifyService', '$scope', 'musicService', '$mdToast'];
 
 class playlistsCtrl {
 	constructor(musicService, $scope, $mdDialog){
