@@ -268,11 +268,12 @@ var slash = (function() {
 
 
 class musicService {
-	constructor($rootScope, spotifyService, $mdToast){
+	constructor($rootScope, spotifyService, $mdToast, $http){
 		'ngInject';
 		this._$rootScope = $rootScope;
 		this._spotifyService = spotifyService;
 		this._$mdToast = $mdToast;
+		this._$http = $http;
 
 		this.getSongs();
 		this.setPlaylists();
@@ -353,7 +354,7 @@ class musicService {
 									if (!musicController.library[data.tags.artist][data.tags.album]) {
 										musicController.library[data.tags.artist][data.tags.album] = [];
 									}
-									musicController.library[data.tags.artist][data.tags.album].push(new Song(data.tags, path));
+									musicController.library[data.tags.artist][data.tags.album].push(new Song(data.tags, path, 'local'));
 									//Resolve the promise
 									resolve();
 							},
@@ -523,12 +524,69 @@ class musicService {
 					resolve();
 				}
 			}
-		})
+		});
+	}
 
+	getYoutubeInfo(id){
+		return this._$http({
+			method: 'GET',
+			url: 'https://www.googleapis.com/youtube/v3/videos',
+			params: {
+				part: 'snippet,contentDetails',
+				key: 'AIzaSyA4P8cyVlr7OZYGGUiavD8WsouHuNT1Q1k',
+				id: id
+			}
+		})
+	}
+
+	convertToMS(input) {
+
+        var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
+        var hours = 0, minutes = 0, seconds = 0, totalms;
+
+        if (reptms.test(input)) {
+            var matches = reptms.exec(input);
+            if (matches[1]) hours = Number(matches[1]);
+            if (matches[2]) minutes = Number(matches[2]);
+            if (matches[3]) seconds = Number(matches[3]);
+            totalms = hours * 3600000  + minutes * 60000 + seconds * 1000;
+        }
+
+        return (totalms);
+    }
+
+	addYoutubeSong(id){
+		var vm = this;
+		return new Promise(function(resolve, reject){
+			vm.getYoutubeInfo(id).then(function(data){
+				var song = {
+					title: data.data.items[0].snippet.title,
+					duration: vm.convertToMS(data.data.items[0].contentDetails.duration),
+					picture: data.data.items[0].snippet.thumbnails.default.url,
+					source: 'youtube',
+					song_id: id
+				};
+				var newSong = new Song(song, song.picture, song.source);
+				if(!vm.library[newSong.artist]){
+					vm.library[newSong.artist] = {};
+				}
+				if(!vm.library[newSong.artist][newSong.album]){
+					vm.library[newSong.artist][newSong.album] = [];
+				}
+				vm.library[newSong.artist][newSong.album].push(newSong);
+				jetpack$1.remove(userDataPath + slash + 'library.json');
+				jetpack$1.write(userDataPath + slash + 'library.json', vm.library);
+				vm._$rootScope.$broadcast('uploadedMusic');
+				resolve();
+			},
+			function(err){
+				reject(err);
+			});
+		});
 	}
 }
 
-musicService.$inject = ['$rootScope', 'spotifyService', '$mdToast'];
+musicService.$inject = ['$rootScope', 'spotifyService', '$mdToast', '$http'];
 
 const {BrowserWindow} = require('electron').remote;
 
@@ -1181,6 +1239,63 @@ class playlistsCtrl {
 
 playlistsCtrl.$inject = ['musicService', '$scope', '$mdDialog'];
 
+class youtubeUploadCtrl {
+	constructor(musicService, $mdToast){
+		'ngInject';
+		this._musicService = musicService;
+		this._$mdToast = $mdToast;
+	}
+
+	getId(url){
+		return new Promise(function(resolve, reject){
+			var p = url.split('?');
+			var params = p[1].split('&');
+			if(params.length === 0){
+				reject('improper url');
+			}
+			for(var x = 0; x < params.length; x++){
+				var pair = params[x].split('=');
+				if(pair[0] === 'v'){
+					resolve(pair[1]);
+				}
+				else if(x === params.length){
+					reject('improper url');
+				}
+			}
+		})
+		
+	}
+
+	addToLibrary(url){
+		var vm = this;
+		vm.getId(url).then(function(id){
+			console.log(id);
+			vm._musicService.addYoutubeSong(id).then(function(){
+				console.log('success!');
+				vm._$mdToast.show({
+					template: '<md-toast>' +
+					          '<div class="md-toast-content">' +
+					            'Song Added to Library!' +
+					          '</div>' +
+					        '</md-toast>',
+					position: 'top right',
+					parent: document.getElementById('content')
+				});
+				vm.url = undefined;
+			},
+			function(err){
+				console.log(err);
+			});
+		},
+		function(err){
+			console.log(err);
+		});
+	}
+
+}
+
+youtubeUploadCtrl.$inject = ['musicService', '$mdToast'];
+
 // Here is the starting point for your application code.
 // All stuff below is just to show you how it works. You can delete all of it.
 
@@ -1202,6 +1317,7 @@ playlistsCtrl.$inject = ['musicService', '$scope', '$mdDialog'];
 	.controller('spotifyUploadCtrl', spotifyUploadCtrl)
 	.controller('musicCtrl', musicCtrl)
 	.controller('playlistsCtrl', playlistsCtrl)
+	.controller('youtubeUploadCtrl', youtubeUploadCtrl)
 	.filter('formatDuration', function () {
 	    return function (input) {
 	        var totalHours, totalMinutes, totalSeconds, hours, minutes, seconds, result='';

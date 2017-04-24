@@ -1,8 +1,14 @@
-<md-content flex='100' layout-padding>
+<md-content flex='100' layout-padding ng-controller='youtubeUploadCtrl as youtube'>
 	<md-button href='#/upload'>
 		<i class='material-icons inline-icon'>arrow_back</i>
 		Back
 	</md-button>
 	<h1>Youtube</h1>
+	
+	<md-input-container>
+		<label>Add by URL</label>
+		<input ng-model="youtube.url">
+	</md-input-container>
+	<md-button class='md-raised md-accent' ng-click='youtube.addToLibrary(youtube.url)'>Add to Library</md-button>
 
 </md-content>

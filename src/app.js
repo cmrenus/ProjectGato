@@ -23,6 +23,7 @@ import musicControlsCtrl from './client/music/musicControlsCtrl';
 import musicCtrl from './client/music/musicCtrl';
 import spotifyUploadCtrl from './client/uploads/spotifyUploadCtrl';
 import playlistsCtrl from './client/music/playlistsCtrl';
+import youtubeUploadCtrl from './client/uploads/youtubeUploadCtrl';
 
 (function(){
 	"use strict";
@@ -40,6 +41,7 @@ import playlistsCtrl from './client/music/playlistsCtrl';
 	.controller('spotifyUploadCtrl', spotifyUploadCtrl)
 	.controller('musicCtrl', musicCtrl)
 	.controller('playlistsCtrl', playlistsCtrl)
+	.controller('youtubeUploadCtrl', youtubeUploadCtrl)
 	.filter('formatDuration', function () {
 	    return function (input) {
 	        var totalHours, totalMinutes, totalSeconds, hours, minutes, seconds, result='';

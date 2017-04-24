@@ -10,7 +10,7 @@ exports.Song = function(data, path, source) {
 
     var image = data.picture;
     console.log(source);
-    if(image && source != 'spotify') {
+    if(image && source == 'local') {
         var base64String = "";
         for (var i = 0; i < image.data.length; i++) {
             base64String += String.fromCharCode(image.data[i]);
@@ -19,7 +19,7 @@ exports.Song = function(data, path, source) {
                 window.btoa(base64String);
         this.picture = base64;
     }
-    else if(image && source === 'spotify'){
+    else if((image && source === 'spotify') || (image && source === 'youtube')){
         this.picture = path;
     }
     else {

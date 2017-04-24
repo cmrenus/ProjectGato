@@ -15,11 +15,12 @@ var slash = (function() {
 
 
 export default class musicService {
-	constructor($rootScope, spotifyService, $mdToast){
+	constructor($rootScope, spotifyService, $mdToast, $http){
 		'ngInject';
 		this._$rootScope = $rootScope;
 		this._spotifyService = spotifyService;
 		this._$mdToast = $mdToast;
+		this._$http = $http;
 
 		this.getSongs();
 		this.setPlaylists();
@@ -100,7 +101,7 @@ export default class musicService {
 									if (!musicController.library[data.tags.artist][data.tags.album]) {
 										musicController.library[data.tags.artist][data.tags.album] = [];
 									}
-									musicController.library[data.tags.artist][data.tags.album].push(new Song(data.tags, path));
+									musicController.library[data.tags.artist][data.tags.album].push(new Song(data.tags, path, 'local'));
 									//Resolve the promise
 									resolve();
 							},
@@ -270,9 +271,66 @@ export default class musicService {
 					resolve();
 				}
 			}
-		})
+		});
+	}
 
+	getYoutubeInfo(id){
+		return this._$http({
+			method: 'GET',
+			url: 'https://www.googleapis.com/youtube/v3/videos',
+			params: {
+				part: 'snippet,contentDetails',
+				key: 'AIzaSyA4P8cyVlr7OZYGGUiavD8WsouHuNT1Q1k',
+				id: id
+			}
+		})
+	}
+
+	convertToMS(input) {
+
+        var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
+        var hours = 0, minutes = 0, seconds = 0, totalms;
+
+        if (reptms.test(input)) {
+            var matches = reptms.exec(input);
+            if (matches[1]) hours = Number(matches[1]);
+            if (matches[2]) minutes = Number(matches[2]);
+            if (matches[3]) seconds = Number(matches[3]);
+            totalms = hours * 3600000  + minutes * 60000 + seconds * 1000;
+        }
+
+        return (totalms);
+    }
+
+	addYoutubeSong(id){
+		var vm = this;
+		return new Promise(function(resolve, reject){
+			vm.getYoutubeInfo(id).then(function(data){
+				var song = {
+					title: data.data.items[0].snippet.title,
+					duration: vm.convertToMS(data.data.items[0].contentDetails.duration),
+					picture: data.data.items[0].snippet.thumbnails.default.url,
+					source: 'youtube',
+					song_id: id
+				}
+				var newSong = new Song(song, song.picture, song.source);
+				if(!vm.library[newSong.artist]){
+					vm.library[newSong.artist] = {};
+				}
+				if(!vm.library[newSong.artist][newSong.album]){
+					vm.library[newSong.artist][newSong.album] = [];
+				}
+				vm.library[newSong.artist][newSong.album].push(newSong);
+				jetpack.remove(userDataPath + slash + 'library.json');
+				jetpack.write(userDataPath + slash + 'library.json', vm.library);
+				vm._$rootScope.$broadcast('uploadedMusic');
+				resolve();
+			},
+			function(err){
+				reject(err);
+			});
+		});
 	}
 }
 
-musicService.$inject = ['$rootScope', 'spotifyService', '$mdToast'];
+musicService.$inject = ['$rootScope', 'spotifyService', '$mdToast', '$http'];
