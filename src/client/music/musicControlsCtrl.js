@@ -84,8 +84,13 @@ export default class musicControlsCtrl {
 	}
 
 	selectAlbum(i) {
-		this.state.albumSelected = true;
+		this.state.albumSelected = this.albums[i];
 		this.songs = this.albums[i].songs;
+	}
+
+	selectArtist(i) {
+		this.state.artistSelected = this.artists[i];
+		this.songs = this.artists[i].songs;
 	}
 
 	setTime() {
