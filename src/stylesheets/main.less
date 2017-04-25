@@ -88,6 +88,7 @@
 }
 
 .panel-container {
+    box-sizing: border-box;
     padding: 20px;
 
     .panel-header {
@@ -99,12 +100,40 @@
         flex-direction: row;
         flex-wrap: wrap;
     }
-    .card {
-        width: 20%;
+    .card-padding {
+        box-sizing: border-box;
+        padding: 10px;
+        width: 25%;
+        margin: 0;
     }
 }
 
+.album-header {
+    display: flex !important;
+    height: 300px;
+    flex-direction: row;
+
+    img {
+        height: 300px;
+        width: auto;
+    }
+
+    .album-info {
+        margin-left: 20px;
+    }
+}
+
+.songs {
+    position: relative;
+    top: -150px;
+}
+
+.songsPanel .songs {
+    top: 0;
+}
+
 .songs-container {
+    background-color: white;
     border: 1px solid #efefef;
     box-shadow: 0 0 8px rgba(0,0,0,.4);;
 }

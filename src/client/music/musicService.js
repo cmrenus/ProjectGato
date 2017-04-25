@@ -75,6 +75,30 @@ export default class musicService {
 			}
 		}
 
+		albums.sort(function(a, b) {
+			if ( a.album.toLowerCase() < b.album.toLowerCase() ) {
+				return -1;
+			}
+
+			if ( a.album.toLowerCase() > b.album.toLowerCase() ) {
+				return 1;
+			}
+
+			return 0;
+		});
+
+		artists.sort(function(a, b) {
+			if ( a.artist.toLowerCase() < b.artist.toLowerCase() ) {
+				return -1;
+			}
+
+			if ( a.artist.toLowerCase() > b.artist.toLowerCase() ) {
+				return 1;
+			}
+
+			return 0;
+		})
+
 		return {
 			songs: songs,
 			artists: artists,

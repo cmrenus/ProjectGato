@@ -328,6 +328,30 @@ class musicService {
 			}
 		}
 
+		albums.sort(function(a, b) {
+			if ( a.album.toLowerCase() < b.album.toLowerCase() ) {
+				return -1;
+			}
+
+			if ( a.album.toLowerCase() > b.album.toLowerCase() ) {
+				return 1;
+			}
+
+			return 0;
+		});
+
+		artists.sort(function(a, b) {
+			if ( a.artist.toLowerCase() < b.artist.toLowerCase() ) {
+				return -1;
+			}
+
+			if ( a.artist.toLowerCase() > b.artist.toLowerCase() ) {
+				return 1;
+			}
+
+			return 0;
+		});
+
 		return {
 			songs: songs,
 			artists: artists,
@@ -957,8 +981,13 @@ class musicControlsCtrl {
 	}
 
 	selectAlbum(i) {
-		this.state.albumSelected = true;
+		this.state.albumSelected = this.albums[i];
 		this.songs = this.albums[i].songs;
+	}
+
+	selectArtist(i) {
+		this.state.artistSelected = this.artists[i];
+		this.songs = this.artists[i].songs;
 	}
 
 	setTime() {
