@@ -1,12 +1,5 @@
 <div ng-controller='playlistsCtrl as p'>
-	<div class='panel-container' ng-if='!musicControls.state.playlistSelected'>
-		<h1>All Playlists
-			<md-button class="md-fab md-mini md-accent" ng-click='p.addPlaylist($event)'>
-				<i class='material-icons' style='line-height: 40px;'>add</i>
-			</md-button>
-		</h1>
-		
-		<div class='row'>
+		<!--<div class='row'>
 			<md-card class='card' ng-repeat='(key,val) in p.playlists'>
 				<a ng-click='p.selectPlaylist(key, value)'>
 				<img ng-src="{{ val[0].picture || './resources/images/albumPlaceholder.png' }}" width='100%' class="md-card-image" alt="">
@@ -17,6 +10,26 @@
 				</md-card-title>
 				</a>
 			</md-card>
+		</div>-->
+	<div class="panel-container" ng-if="!musicControls.state.playlistSelected">
+		<h1>All Playlists
+			<md-button class="md-fab md-mini md-accent" ng-click='p.addPlaylist($event)'>
+				<i class='material-icons' style='line-height: 40px;'>add</i>
+			</md-button>
+		</h1>
+		<div class='row'>
+			<div class="card-padding" ng-repeat='(key,val) in p.playlists'>
+				<md-card>
+				<a ng-click="p.selectPlaylist(key, value)">
+					<img ng-src="{{ val[0].picture || './resources/images/albumPlaceholder.png' }}" width='100%' class="md-card-image" alt="">
+					<md-card-title>
+						<md-card-title-text style='text-overflow: ellipsis;overflow: hidden;'>
+							<md-truncate><span class="md-headline">{{ key }}</span></md-truncate>
+						</md-card-title-text>
+					</md-card-title>
+				</a>
+				</md-card>
+			</div>
 		</div>
 	</div>
 	<div ng-if='musicControls.state.playlistSelected'>

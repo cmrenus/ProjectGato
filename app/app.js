@@ -456,13 +456,19 @@ class musicService {
 
 	createPlaylist(playlist_name) {
 		//this.playlist = {};
-		this.playlists[playlist_name] = [];
+		if(playlist_name) {
+			this.playlists[playlist_name] = [];
+		}
 		jetpack$1.remove(userDataPath + slash + 'playlists.json');
 		jetpack$1.write(userDataPath + slash + 'playlists.json', this.playlists);
 	}
 
 	addToPlaylist(song, playlist_name, source) {
-
+		console.log(this.playlists);
+		console.log(playlist_name);
+		this.playlists[playlist_name].push(song);
+		console.log(this.playlists[playlist_name]);
+		this.createPlaylist();
 	}
 
 	addSpotifySongToLibrary(track_id){
@@ -921,12 +927,20 @@ class musicControlsCtrl {
 		this.songs = [];
 		this.artists = [];
 		this.albums = [];
+		this.playlists = null;
 		this.index = 0;
 		this.player = document.getElementById('music-player');
 		this.percentPlayed = 0;
 		this.currentSong = null;
+		this.selectedSong = null;
 		var vm = this;
 		this._musicService = musicService;
+		this.menu = {
+			open: '',
+			subMenu: false,
+			x: 0,
+			y:0
+		};
 
 		this.state = {
 			albumSelected: false,
@@ -948,6 +962,8 @@ class musicControlsCtrl {
 
 		$scope.$on('uploadedMusic', function(e){
 			vm.library = vm._musicService.getSongs();
+			vm.playlists = vm._musicService.setPlaylists();
+			console.log(vm.playlists);
 			vm.songs = vm.library.songs;
 			vm.currentSong = vm.songs[0];
 			vm.albums = vm.library.albums;
@@ -955,6 +971,8 @@ class musicControlsCtrl {
 		});
 
 		this.library = musicService.getSongs();
+		this.playlists = musicService.setPlaylists();
+		console.log(this.playlists);
 		if(this.library) {
 			this.songs = this.library.songs;
 			this.currentSong = this.songs[0];
@@ -1049,6 +1067,26 @@ class musicControlsCtrl {
 		this.currentSong = this.songs[this.index];
 		this.pause();
 		this.play();
+	}
+
+	checkMenuOpen(evt, song) {
+		if (evt.which === 3) {
+			this.menu.open = 'show-menu';
+			this.menu.x = event.clientX;
+			this.menu.y = event.clientY;
+
+			this.selectedSong = this.songs[this.songs.indexOf(song)];
+			console.log(this.selectedSong);
+		}
+	}
+
+	menuAdd(playlist_name) {
+		console.log(playlist_name);
+		console.log(this.selectedSong);
+		this._musicService.addToPlaylist(this.selectedSong, playlist_name);
+
+		this.menu.open = '';
+		this.menu.subMenu = false;
 	}
 
 	openFileExplorer() {
@@ -1215,7 +1253,7 @@ class playlistsCtrl {
 		this.currentPlaylist = {};
 	}
 
-	init(){
+	init() {
 		this.playlists = this._musicService.getPlaylists();
 		var vm = this;
 		vm._$scope.$watch(function(){return vm._musicService.getPlaylists()}, function(newVal, oldVal, scope){
@@ -1229,6 +1267,7 @@ class playlistsCtrl {
 	}
 
 	selectPlaylist(name){
+		console.log('selecting playlist');
 		this._$scope.musicControls.state.playlistSelected = true;
 		this._$scope.musicControls.songs = this.playlists[name];
 		this.currentPlaylist = {
@@ -1237,13 +1276,13 @@ class playlistsCtrl {
 			count: this.playlists[name].length
 		};
 		var vm = this;
-		for(var x = 0; x < this.playlists[name].length; x++){
-			vm.currentPlaylist.duration += Number(vm.playlists[name][x].duration);
-			if(x === vm.playlists[name].length - 1){
-				vm._$scope.$apply();
-			}
-			//console.log(vm.playlists[name][x].duration);
-		}
+		// for(var x = 0; x < this.playlists[name].length; x++){
+		// 	//vm.currentPlaylist.duration += Number(vm.playlists[name][x].duration);
+		// 	// if(x === vm.playlists[name].length - 1){
+		// 	// 	vm._$scope.$apply();
+		// 	// }
+		// 	//console.log(vm.playlists[name][x].duration);
+		// }
 	}
 
 	addPlaylist(ev){

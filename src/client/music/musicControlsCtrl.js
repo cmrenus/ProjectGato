@@ -24,12 +24,20 @@ export default class musicControlsCtrl {
 		this.songs = [];
 		this.artists = [];
 		this.albums = [];
+		this.playlists = null;
 		this.index = 0;
 		this.player = document.getElementById('music-player');
 		this.percentPlayed = 0;
 		this.currentSong = null;
+		this.selectedSong = null;
 		var vm = this;
 		this._musicService = musicService;
+		this.menu = {
+			open: '',
+			subMenu: false,
+			x: 0,
+			y:0
+		}
 
 		this.state = {
 			albumSelected: false,
@@ -51,6 +59,8 @@ export default class musicControlsCtrl {
 
 		$scope.$on('uploadedMusic', function(e){
 			vm.library = vm._musicService.getSongs();
+			vm.playlists = vm._musicService.setPlaylists();
+			console.log(vm.playlists);
 			vm.songs = vm.library.songs;
 			vm.currentSong = vm.songs[0];
 			vm.albums = vm.library.albums;
@@ -58,6 +68,8 @@ export default class musicControlsCtrl {
 		});
 
 		this.library = musicService.getSongs();
+		this.playlists = musicService.setPlaylists();
+		console.log(this.playlists);
 		if(this.library) {
 			this.songs = this.library.songs;
 			this.currentSong = this.songs[0];
@@ -152,6 +164,26 @@ export default class musicControlsCtrl {
 		this.currentSong = this.songs[this.index];
 		this.pause();
 		this.play();
+	}
+
+	checkMenuOpen(evt, song) {
+		if (evt.which === 3) {
+			this.menu.open = 'show-menu';
+			this.menu.x = event.clientX;
+			this.menu.y = event.clientY;
+
+			this.selectedSong = this.songs[this.songs.indexOf(song)];
+			console.log(this.selectedSong);
+		}
+	}
+
+	menuAdd(playlist_name) {
+		console.log(playlist_name);
+		console.log(this.selectedSong);
+		this._musicService.addToPlaylist(this.selectedSong, playlist_name);
+
+		this.menu.open = '';
+		this.menu.subMenu = false;
 	}
 
 	openFileExplorer() {

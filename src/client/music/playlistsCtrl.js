@@ -10,7 +10,7 @@ export default class playlistsCtrl {
 		this.currentPlaylist = {};
 	}
 
-	init(){
+	init() {
 		this.playlists = this._musicService.getPlaylists();
 		var vm = this;
 		vm._$scope.$watch(function(){return vm._musicService.getPlaylists()}, function(newVal, oldVal, scope){
@@ -24,6 +24,7 @@ export default class playlistsCtrl {
 	}
 
 	selectPlaylist(name){
+		console.log('selecting playlist');
 		this._$scope.musicControls.state.playlistSelected = true;
 		this._$scope.musicControls.songs = this.playlists[name];
 		this.currentPlaylist = {
@@ -32,13 +33,13 @@ export default class playlistsCtrl {
 			count: this.playlists[name].length
 		};
 		var vm = this;
-		for(var x = 0; x < this.playlists[name].length; x++){
-			vm.currentPlaylist.duration += Number(vm.playlists[name][x].duration);
-			if(x === vm.playlists[name].length - 1){
-				vm._$scope.$apply();
-			}
-			//console.log(vm.playlists[name][x].duration);
-		}
+		// for(var x = 0; x < this.playlists[name].length; x++){
+		// 	//vm.currentPlaylist.duration += Number(vm.playlists[name][x].duration);
+		// 	// if(x === vm.playlists[name].length - 1){
+		// 	// 	vm._$scope.$apply();
+		// 	// }
+		// 	//console.log(vm.playlists[name][x].duration);
+		// }
 	}
 
 	addPlaylist(ev){

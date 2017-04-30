@@ -114,3 +114,26 @@
   border: 1px solid #efefef;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
 }
+.right-click-menu {
+  border: 1px solid #efefef;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  background-color: white;
+  display: none;
+  position: fixed;
+  z-index: 200;
+}
+.show-menu {
+  display: block;
+}
+.playlist-selector {
+  border: 1px solid #efefef;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  background-color: white;
+  position: absolute;
+  left: 100%;
+  top: 0;
+}
+.playlist-selector .selector-item {
+  min-width: 200px;
+  max-width: 300px;
+}

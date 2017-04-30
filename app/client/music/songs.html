@@ -1,4 +1,16 @@
 <div class="panel-container songs">
+    <div ng-if="musicControls.menu.open" ng-style="{top: musicControls.menu.y + 'px', left: musicControls.menu.x + 'px'}" class="right-click-menu" ng-class="musicControls.menu.open">
+        <div ng-if="musicControls.menu.subMenu" class="playlist-selector">
+            <md-list-item ng-click="musicControls.menuAdd(key)" ng-repeat="(key,val) in musicControls.playlists">
+                <div class="selector-item">
+                    <p>{{key}}</p>
+                </div>
+            </md-list-item>
+        </div>
+        <md-list-item ng-click="musicControls.menu.subMenu = true">
+            <div>Add to playlist</div>
+        </md-list-item>
+    </div>
     <md-list-item layout='row'>
         <a href='' flex='33' ng-click='musicCtrl.order("title")' ng-style='{color: musicControls.accentColor}'>
             <h4 class='inline-icon'>
@@ -45,7 +57,7 @@
         <md-divider ng-if="$first"></md-divider>
     </md-list-item>
     <div class="songs-container">
-        <md-list-item layout="row" ng-repeat="song in musicControls.songs | filter: musicCtrl.searchbar.searchQuery | orderBy: musicCtrl.predicate: musicCtrl.reverse" ng-click="musicControls.setSong(song)" class="noright">
+        <md-list-item layout="row" ng-repeat="song in musicControls.songs | filter: musicCtrl.searchbar.searchQuery | orderBy: musicCtrl.predicate: musicCtrl.reverse" ng-mousedown="musicControls.checkMenuOpen($event, song)" ng-click="musicControls.setSong(song)" class="noright">
             <div flex="33" class="md-list-item-text">
                 <p>{{ song.title }}</p>
             </div>

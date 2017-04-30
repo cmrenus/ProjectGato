@@ -203,13 +203,19 @@ export default class musicService {
 
 	createPlaylist(playlist_name) {
 		//this.playlist = {};
-		this.playlists[playlist_name] = [];
+		if(playlist_name) {
+			this.playlists[playlist_name] = [];
+		}
 		jetpack.remove(userDataPath + slash + 'playlists.json');
 		jetpack.write(userDataPath + slash + 'playlists.json', this.playlists);
 	}
 
 	addToPlaylist(song, playlist_name, source) {
-
+		console.log(this.playlists);
+		console.log(playlist_name);
+		this.playlists[playlist_name].push(song);
+		console.log(this.playlists[playlist_name]);
+		this.createPlaylist();
 	}
 
 	addSpotifySongToLibrary(track_id){
